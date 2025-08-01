@@ -4,7 +4,7 @@ import { Plane, Home } from "lucide-react";
 
 export function RecentMatches({ recentMatches }: { recentMatches: Match[] }) {
   return (
-    <section className="max-w-lg">
+    <section className="max-w-lg pt-4">
       <h3 className="font-semibold">Últimos 5 partidos</h3>
       {recentMatches.map((match, index) => (
         <article

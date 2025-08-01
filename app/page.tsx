@@ -27,7 +27,7 @@ export default function Home() {
   const countdown = useCountdown(countdownTargetDate);
 
   return (
-    <>
+    <div className="lg:ml-10 space-y-6">
       <h1 className="font-bold tracking-tighter text-6xl sm:text-8xl mt-6 max-w-xl">
         Hoy juega Morón?
       </h1>
@@ -42,6 +42,6 @@ export default function Home() {
         </div>
       )}
       <RecentMatches recentMatches={recentMatches} />
-    </>
+    </div>
   );
 }

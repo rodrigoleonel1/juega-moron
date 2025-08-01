@@ -22,7 +22,9 @@ export function CountdownDisplay({
     <section className="grid grid-cols-4 max-w-lg">
       {countdownItems.map((item, index) => (
         <article key={index} className="text-center">
-          <p className="text-4xl sm:text-6xl font-bold tabular-nums">{item.value}</p>
+          <p className="text-5xl sm:text-6xl font-bold tabular-nums">
+            {item.value}
+          </p>
           <p className="text-sm">{item.label}</p>
         </article>
       ))}
