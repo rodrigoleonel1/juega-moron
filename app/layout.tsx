@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/header";
 
 const workSans = Work_Sans({
   subsets: ["latin"],
@@ -18,7 +19,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${workSans.className} antialiased`}>{children}</body>
+      <body className={`${workSans.className} antialiased`}>
+        <main className="relative min-h-screen">
+          <div className="absolute inset-0 bg-[url(/bg.jpg)] bg-center bg-cover opacity-70 z-0  bg-fixed" />
+          <Header />
+          <section className="relative z-10 h-full text-white p-8 flex flex-col gap-8  mr-auto">
+            {children}
+          </section>
+        </main>
+      </body>
     </html>
   );
 }

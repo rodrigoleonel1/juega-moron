@@ -1,4 +1,4 @@
-import { getResultColor } from "@/lib/utils";
+import { getResultTextColor } from "@/lib/utils";
 import { Match } from "@/data/fixture";
 import { Plane, Home } from "lucide-react";
 
@@ -21,7 +21,7 @@ export function RecentMatches({ recentMatches }: { recentMatches: Match[] }) {
           </div>
 
           <span
-            className={`bg-black/50 rounded-md px-2 font-semibold ${getResultColor(
+            className={`bg-black/60 rounded-md px-2 font-semibold ${getResultTextColor(
               match.result || ""
             )}`}
           >

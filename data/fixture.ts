@@ -3,6 +3,7 @@ export const FIXTURE = [
     versus: "Almirante Brown",
     isAway: true,
     id_escudoteca: "almirante",
+    id_prom: "hbbc",
     datetime: "2025-02-09T19:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/almirante-brown-vs-deportivo-moron/edcefbj",
@@ -15,6 +16,7 @@ export const FIXTURE = [
     versus: "Central Norte",
     isAway: false,
     id_escudoteca: "central_norte",
+    id_prom: "jiaj",
     datetime: "2025-02-16T17:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-central-norte/edcefac",
@@ -27,6 +29,7 @@ export const FIXTURE = [
     versus: "Gimnasia (M)",
     isAway: true,
     id_escudoteca: "gimnasiamendoza",
+    id_prom: "bbjbf",
     datetime: "2025-02-23T20:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/gimnasia-mendoza-vs-deportivo-moron/edceeie",
@@ -39,6 +42,7 @@ export const FIXTURE = [
     versus: "Gimnasia (J)",
     isAway: false,
     id_escudoteca: "gimnasiajujuy",
+    id_prom: "iib",
     datetime: "2025-03-02T21:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-gimnasia-jujuy/edceege",
@@ -51,6 +55,7 @@ export const FIXTURE = [
     versus: "Agropecuario",
     isAway: true,
     id_escudoteca: "agropecuario",
+    id_prom: "bbjce",
     datetime: "2025-03-09T17:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/agropecuario-vs-deportivo-moron/edceeej",
@@ -63,6 +68,7 @@ export const FIXTURE = [
     versus: "San Telmo",
     isAway: false,
     id_escudoteca: "santelmo",
+    id_prom: "hbbb",
     datetime: "2025-03-15T18:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-san-telmo/edceeci",
@@ -75,6 +81,7 @@ export const FIXTURE = [
     versus: "Chacarita",
     isAway: true,
     id_escudoteca: "chacarita",
+    id_prom: "gbjg",
     datetime: "2025-03-23T14:50:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/chacarita-juniors-vs-deportivo-moron/edceebe",
@@ -87,6 +94,7 @@ export const FIXTURE = [
     versus: "Defensores de Belgrano",
     isAway: false,
     id_escudoteca: "defensores",
+    id_prom: "hbid",
     datetime: "2025-03-30T15:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-defensores-de-belgrano/edcedjb",
@@ -100,6 +108,7 @@ export const FIXTURE = [
     versus: "Estudiantes RC",
     isAway: true,
     id_escudoteca: "estudiantesrc",
+    id_prom: "bheaf",
     datetime: "2025-04-06T19:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/estudiantes-rio-cuarto-vs-deportivo-moron/edcedhj",
@@ -113,6 +122,7 @@ export const FIXTURE = [
     versus: "Talleres RE",
     isAway: false,
     id_escudoteca: "talleresre",
+    id_prom: "bbijj",
     datetime: "2025-04-13T16:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-talleres-re/edcedfe",
@@ -125,6 +135,7 @@ export const FIXTURE = [
     versus: "Nueva Chicago",
     isAway: true,
     id_escudoteca: "nueva_chicago",
+    id_prom: "bcai",
     datetime: "2025-04-20T17:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/nueva-chicago-vs-deportivo-moron/edcedee",
@@ -137,6 +148,7 @@ export const FIXTURE = [
     versus: "Estudiantes de Caseros",
     isAway: true,
     id_escudoteca: "estudiantes",
+    id_prom: "hbbg",
     datetime: "2025-04-26T17:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/estudiantes-buenos-aires-vs-deportivo-moron/edcedbi",
@@ -150,6 +162,7 @@ export const FIXTURE = [
     versus: "Defensores Unidos",
     isAway: false,
     id_escudoteca: "cadu",
+    id_prom: "bbjdc",
     datetime: "2025-05-03T19:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-defensores-unidos/edcedah",
@@ -162,6 +175,7 @@ export const FIXTURE = [
     versus: "Temperley",
     isAway: true,
     id_escudoteca: "temperley",
+    id_prom: "hbac",
     datetime: "2025-05-11T20:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/temperley-vs-deportivo-moron/edcecid",
@@ -174,6 +188,7 @@ export const FIXTURE = [
     versus: "Colón",
     isAway: false,
     id_escudoteca: "colon",
+    id_prom: "iha",
     datetime: "2025-06-07T19:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-colon/eecjjac",
@@ -186,6 +201,7 @@ export const FIXTURE = [
     versus: "Mitre SdE",
     isAway: true,
     id_escudoteca: "mitre",
+    id_prom: "bbjcd",
     datetime: "2025-05-25T17:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/mitre-sde-vs-deportivo-moron/edcecei",
@@ -198,6 +214,7 @@ export const FIXTURE = [
     versus: "Chaco For Ever",
     isAway: false,
     id_escudoteca: "chaco_for_ever",
+    id_prom: "bdiha",
     datetime: "2025-05-31T15:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-chaco-for-ever/edcecdd",
@@ -210,6 +227,7 @@ export const FIXTURE = [
     versus: "Almirante Brown",
     isAway: false,
     id_escudoteca: "almirante",
+    id_prom: "hbbc",
     datetime: "2025-06-14T18:50:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-almirante-brown/edcecbd",
@@ -222,6 +240,7 @@ export const FIXTURE = [
     versus: "Central Norte",
     isAway: true,
     id_escudoteca: "central_norte",
+    id_prom: "jiaj",
     datetime: "2025-06-22T17:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/central-norte-vs-deportivo-moron/edcebjg",
@@ -234,7 +253,8 @@ export const FIXTURE = [
     versus: "Gimnasia (M)",
     isAway: false,
     id_escudoteca: "gimnasiamendoza",
-    datetime: "",
+    id_prom: "bbjbf",
+    datetime: "2025-08-16T19:00:00",
     ficha_partido: "",
     ficha_rival: "https://www.promiedos.com.ar/team/gimnasia-mendoza/bbjbf",
     streaming: "",
@@ -246,6 +266,7 @@ export const FIXTURE = [
     versus: "Gimnasia (J)",
     isAway: true,
     id_escudoteca: "gimnasiajujuy",
+    id_prom: "iib",
     datetime: "2025-07-06T16:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/gimnasia-jujuy-vs-deportivo-moron/edcebfj",
@@ -258,11 +279,12 @@ export const FIXTURE = [
     versus: "Agropecuario",
     isAway: false,
     id_escudoteca: "agropecuario",
+    id_prom: "bbjce",
     datetime: "2025-07-12T15:20:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-agropecuario/edcebed",
     ficha_rival: "https://www.promiedos.com.ar/team/agropecuario/bbjce",
-    youtube: "",
+    youtube: "https://www.youtube.com/watch?v=vJOsPwCNQrs",
     result: "1-1 (E)",
     estadio: "Estadio Ofelia Rosenzuaig",
   },
@@ -270,11 +292,12 @@ export const FIXTURE = [
     versus: "San Telmo",
     isAway: true,
     id_escudoteca: "santelmo",
+    id_prom: "hbbb",
     datetime: "2025-07-19T14:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/san-telmo-vs-deportivo-moron/edcebcc",
     ficha_rival: "https://www.promiedos.com.ar/team/san-telmo/hbbb",
-    youtube: "",
+    youtube: "https://www.youtube.com/watch?v=uFyiBIZnfPY",
     result: "2-1 (G)",
     estadio: "Estadio Dr. Osvaldo Francisco Baletto",
   },
@@ -282,18 +305,20 @@ export const FIXTURE = [
     versus: "Chacarita",
     isAway: false,
     id_escudoteca: "chacarita",
+    id_prom: "gbjg",
     datetime: "2025-07-26T17:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-chacarita-juniors/edcebai",
-    ficha_rival: "",
+    ficha_rival: "https://www.promiedos.com.ar/team/chacarita-juniors/gbjg",
     result: "0-2 (P)",
-    youtube: "",
+    youtube: "https://www.youtube.com/watch?v=JDkessHDGUY",
     estadio: "Estadio de Chacarita",
   },
   {
     versus: "Defensores de Belgrano",
     isAway: true,
     id_escudoteca: "defensores",
+    id_prom: "hbid",
     datetime: "2025-08-04T21:10:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/defensores-de-belgrano-vs-deportivo-moron/edceaif",
@@ -307,6 +332,7 @@ export const FIXTURE = [
     versus: "Estudiantes RC",
     isAway: false,
     id_escudoteca: "estudiantesrc",
+    id_prom: "bheaf",
     datetime: "2025-08-09T19:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-estudiantes-rio-cuarto/edceagi",
@@ -320,6 +346,7 @@ export const FIXTURE = [
     versus: "Talleres RE",
     isAway: true,
     id_escudoteca: "talleresre",
+    id_prom: "bbijj",
     datetime: "2025-08-23T16:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/talleres-re-vs-deportivo-moron/edceaei",
@@ -332,6 +359,7 @@ export const FIXTURE = [
     versus: "Nueva Chicago",
     isAway: false,
     id_escudoteca: "nueva_chicago",
+    id_prom: "bcai",
     datetime: "2025-08-30T17:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-nueva-chicago/edceadi",
@@ -344,6 +372,7 @@ export const FIXTURE = [
     versus: "Estudiantes de Caseros",
     isAway: false,
     id_escudoteca: "estudiantes",
+    id_prom: "hbbg",
     datetime: "2025-09-06T17:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-estudiantes-buenos-aires/edceabc",
@@ -357,6 +386,7 @@ export const FIXTURE = [
     versus: "Defensores Unidos",
     isAway: true,
     id_escudoteca: "cadu",
+    id_prom: "bbjdc",
     datetime: "2025-09-13T19:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/defensores-unidos-vs-deportivo-moron/edceaac",
@@ -369,6 +399,7 @@ export const FIXTURE = [
     versus: "Temperley",
     isAway: false,
     id_escudoteca: "temperley",
+    id_prom: "hbac",
     datetime: "2025-09-20T20:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-temperley/edcdjhh",
@@ -381,6 +412,7 @@ export const FIXTURE = [
     versus: "Colón",
     isAway: true,
     id_escudoteca: "colon",
+    id_prom: "iha",
     datetime: "2025-09-27T19:15:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/colon-vs-deportivo-moron/edcdjgg",
@@ -393,6 +425,7 @@ export const FIXTURE = [
     versus: "Mitre SdE",
     isAway: false,
     id_escudoteca: "mitre",
+    id_prom: "bbjcd",
     datetime: "2025-10-04T17:00:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-mitre-sde/edcdjec",
@@ -405,6 +438,7 @@ export const FIXTURE = [
     versus: "Chaco For Ever",
     isAway: true,
     id_escudoteca: "chaco_for_ever",
+    id_prom: "bdiha",
     datetime: "2025-10-11T15:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/chaco-for-ever-vs-deportivo-moron/edcdjcg",
@@ -420,6 +454,7 @@ export interface Match {
   estadio: string;
   isAway: boolean;
   id_escudoteca: string;
+  id_prom: string;
   datetime: string;
   ficha_partido: string;
   ficha_rival: string;
@@ -434,7 +469,6 @@ export function getNextMatch(): Match | null {
   ).sort(
     (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
   );
-
   return upcomingMatches.length > 0 ? upcomingMatches[0] : null;
 }
 
@@ -444,4 +478,8 @@ export function getRecentMatches(limit = 5): Match[] {
       (a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
     )
     .slice(0, limit);
+}
+
+export function getMatches(): Match[] {
+  return FIXTURE;
 }
