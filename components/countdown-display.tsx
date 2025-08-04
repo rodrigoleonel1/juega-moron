@@ -1,9 +1,12 @@
+import MatchScoreboard from "./match-scoreboard";
+
 interface CountdownDisplayProps {
   days: number;
   hours: number;
   minutes: number;
   seconds: number;
   isLive: boolean;
+  ficha_partido: string;
 }
 
 export function CountdownDisplay({
@@ -12,14 +15,10 @@ export function CountdownDisplay({
   minutes,
   seconds,
   isLive,
+  ficha_partido,
 }: CountdownDisplayProps) {
   if (isLive) {
-    return (
-      <div className="bg-black/60 text-white rounded-md shadow-md max-w-lg text-center py-4">
-        <h3 className="text-2xl font-bold">🔴JUGANDO EN VIVO</h3>
-        <p className="text-sm opacity-90">El partido está en curso</p>
-      </div>
-    );
+    return <MatchScoreboard ficha_partido={ficha_partido} />;
   }
 
   const countdownItems = [
