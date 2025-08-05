@@ -6,7 +6,6 @@ import { useCountdown } from "@/hooks/use-countdown";
 import { CountdownDisplay } from "@/components/countdown-display";
 import { RecentMatches } from "@/components/recent-matches";
 import { NextMatch } from "@/components/next-match";
-import MatchScoreboard from "@/components/match-scoreboard";
 
 export default function Home() {
   const [nextMatch, setNextMatch] = useState<Match | null>(null);

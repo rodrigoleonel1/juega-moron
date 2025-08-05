@@ -27,7 +27,7 @@ export default function MatchScoreboard({
   useEffect(() => {
     const fetchMatch = async () => {
       try {
-        const res = await fetch("https://juegamoron.vercel.app/api/match-scoreboard", {
+        const res = await fetch("/api/match-scoreboard", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

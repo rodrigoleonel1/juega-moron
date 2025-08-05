@@ -254,7 +254,7 @@ export const FIXTURE = [
     isAway: false,
     id_escudoteca: "gimnasiamendoza",
     id_prom: "bbjbf",
-    datetime: "2025-08-16T19:00:00",
+    datetime: "2025-08-13T19:00:00",
     ficha_partido: "",
     ficha_rival: "https://www.promiedos.com.ar/team/gimnasia-mendoza/bbjbf",
     streaming: "",
@@ -324,7 +324,7 @@ export const FIXTURE = [
       "https://www.promiedos.com.ar/game/defensores-de-belgrano-vs-deportivo-moron/edceaif",
     ficha_rival:
       "https://www.promiedos.com.ar/team/defensores-de-belgrano/hbid",
-    result: "",
+    result: "0-0 (E)",
     youtube: "",
     estadio: "Estadio Juan Pasquale",
   },
