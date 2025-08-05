@@ -27,7 +27,7 @@ export default function MatchScoreboard({
   useEffect(() => {
     const fetchMatch = async () => {
       try {
-        const res = await fetch("/api/match-scoreboard", {
+        const res = await fetch("https://juegamoron.vercel.app/api/match-scoreboard", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default function MatchScoreboard({
 
   return (
     <main className="max-w-lg font-sans text-center bg-black/60 py-4 rounded-md shadow-md">
-      <h1 className="text-2xl font-bold mb-6">🔴 Partido en vivo</h1>
+      <h1 className="text-2xl font-bold mb-6">Partido en vivo</h1>
 
       <div className="flex items-center justify-center gap-8 text-lg font-semibold">
         {/* Equipo Local */}
