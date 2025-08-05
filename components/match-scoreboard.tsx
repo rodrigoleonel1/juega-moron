@@ -48,7 +48,7 @@ export default function MatchScoreboard({
 
     fetchMatch();
 
-    const interval = setInterval(fetchMatch, 10000);
+    const interval = setInterval(fetchMatch, 60000);
 
     return () => clearInterval(interval);
   }, []);

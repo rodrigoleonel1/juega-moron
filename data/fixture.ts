@@ -464,11 +464,19 @@ export interface Match {
 
 export function getNextMatch(): Match | null {
   const now = new Date();
-  const upcomingMatches = FIXTURE.filter(
-    (match) => !match.result && new Date(match.datetime) > now
-  ).sort(
+
+  const upcomingMatches = FIXTURE.filter((match) => {
+    const matchTime = new Date(match.datetime);
+    const matchEndTime = new Date(matchTime.getTime() + 105 * 60 * 1000);
+
+    return (
+      !match.result &&
+      (matchTime > now || (now >= matchTime && now <= matchEndTime))
+    );
+  }).sort(
     (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
   );
+
   return upcomingMatches.length > 0 ? upcomingMatches[0] : null;
 }
 
