@@ -325,7 +325,7 @@ export const FIXTURE = [
     ficha_rival:
       "https://www.promiedos.com.ar/team/defensores-de-belgrano/hbid",
     result: "0-0 (E)",
-    youtube: "",
+    youtube: "https://www.youtube.com/watch?v=EuV0i7aBOrk",
     estadio: "Estadio Juan Pasquale",
   },
   {

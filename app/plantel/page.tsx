@@ -41,6 +41,7 @@ export default function PlantelPage() {
     let aVal: string | number = a[sortKey];
     let bVal: string | number = b[sortKey];
 
+
     if (sortKey === "posicion") {
       aVal = POSICION_ORDER[a.posicion] || 999;
       bVal = POSICION_ORDER[b.posicion] || 999;
@@ -56,35 +57,40 @@ export default function PlantelPage() {
 
   return (
     <div className="md:mx-auto space-y-4">
-      <h1 className="text-2xl font-semibold">Plantel temporada 2025</h1>
       <div className="overflow-x-auto">
-        <table className="shadow-md rounded-md text-sm">
+        <table className="shadow-md rounded-md text-sm w-full">
+          <caption className="text-2xl font-semibold text-left p-2 mb-2">
+            Plantel temporada 2025
+          </caption>
           <thead className="bg-white text-gray-700">
             <tr>
               {headers.map((header) => (
                 <th
                   key={header}
+                  scope="col"
+                  aria-sort={
+                    sortKey === header
+                      ? sortOrder === "asc"
+                        ? "ascending"
+                        : "descending"
+                      : "none"
+                  }
                   onClick={() => handleSort(header)}
                   className="px-4 py-2 capitalize cursor-pointer select-none hover:bg-gray-200 transition w-32 text-center"
                 >
                   {header.replace("_", " ")}
-                  {sortKey === header ? (sortOrder === "asc" ? "↑" : "↓") : " "}
+                  <span aria-hidden="true">
+                    {sortKey === header ? (sortOrder === "asc" ? " ↑" : " ↓") : " "}
+                  </span>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {sortedPlayers.map((player, index) => (
-              <tr
-                key={player.nombre + index}
-                className={
-                  index % 2 === 0
-                    ? "bg-black/70 backdrop-blur-sm"
-                    : "bg-black/80 backdrop-blur-sm"
-                }
-              >
+              <tr key={player.nombre} className={index % 2 === 0 ? "bg-black/70" : "bg-black/80"}>
                 {headers.map((key) => (
-                  <td key={key} className="px-4 py-2">
+                  <td key={key} className="px-4 py-2 text-center">
                     {player[key]}
                   </td>
                 ))}

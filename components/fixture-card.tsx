@@ -15,7 +15,7 @@ export function FixtureCard({ match }: { match: Match }) {
         >
           <img
             src="https://api.promiedos.com.ar/images/team/hbba/1"
-            alt={match.versus}
+            alt="Deportivo Morón"
             className="h-8 w-8"
           />
           <span>{match.result.split(" ")[0]}</span>
@@ -29,7 +29,7 @@ export function FixtureCard({ match }: { match: Match }) {
         <header className="bg-blue-100 text-blue-700 text-lg rounded-md font-semibold py-1 flex gap-2 justify-center items-center">
           <img
             src="https://api.promiedos.com.ar/images/team/hbba/1"
-            alt={match.versus}
+            alt="Deportivo Morón"
             className="h-8 w-8"
           />
           <span>vs.</span>
@@ -41,24 +41,24 @@ export function FixtureCard({ match }: { match: Match }) {
         </header>
       )}
 
-      <main className="font-medium flex flex-col gap-1">
+      <div className="font-medium flex flex-col gap-1">
         <div className="flex items-center gap-2 text-sm">
-          <Calendar className="w-4 h-4" />
+          <Calendar className="w-4 h-4" aria-hidden="true" />
           <span>{formatted.date}</span>
         </div>
         <div className="flex items-center gap-2 text-sm">
-          <Clock className="w-4 h-4" />
+          <Clock className="w-4 h-4" aria-hidden="true" />
           <span>{formatted.time} H.</span>
         </div>
         <div className="flex items-center gap-2 text-sm">
           {match.isAway ? (
-            <Plane className="w-4 h-4" />
+            <Plane className="w-4 h-4" aria-hidden="true" />
           ) : (
-            <Home className="w-4 h-4" />
+            <Home className="w-4 h-4" aria-hidden="true" />
           )}
           <span>{match.isAway ? "Visitante" : "Local"}</span>
         </div>
-      </main>
+      </div>
 
       {match.result ? (
         <footer className="grid gap-2 grid-cols-2">
@@ -66,6 +66,7 @@ export function FixtureCard({ match }: { match: Match }) {
             href={match.youtube}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`Ver resumen del partido contra ${match.versus}`}
             className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
           >
             Resumen
@@ -74,6 +75,7 @@ export function FixtureCard({ match }: { match: Match }) {
             href={match.ficha_partido}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`Ver ficha del partido contra ${match.versus}`}
             className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
           >
             Ficha
