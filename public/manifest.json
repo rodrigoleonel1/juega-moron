@@ -1,0 +1,16 @@
+{
+  "name": "Hoy juega Morón?",
+  "short_name": "Juega Morón",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#b91c1c",
+  "description": "Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados y más sobre el Gallo.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48 72x72 96x96 128x128 256x256",
+      "type": "image/x-icon"
+    }
+  ]
+}

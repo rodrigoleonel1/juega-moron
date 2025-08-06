@@ -74,9 +74,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="google-site-verification"
+          content="8WARsLdu7-U5Xn5naWCUDUFKgOMsEK3rl4eZGz5iskM"
+        />
+        <link rel="canonical" href={siteUrl} />
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body className={`${workSans.className} antialiased`}>
         <main className="relative min-h-screen">
-          <div className="absolute inset-0 bg-[url(/bg.jpg)] bg-center bg-cover opacity-70 z-0  bg-fixed" />
+          <div
+            className="absolute inset-0 bg-[url(/bg.jpg)] bg-center bg-cover opacity-70 z-0 bg-fixed"
+            aria-hidden="true"
+          />
           <Header />
           <section className="relative z-10 h-full p-8 flex flex-col gap-8  mr-auto">
             {children}
