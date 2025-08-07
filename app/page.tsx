@@ -34,19 +34,21 @@ export default function Home() {
     ? {
         "@context": "https://schema.org",
         "@type": "SportsEvent",
-        "name": `Deportivo Morón vs ${nextMatch.versus}`,
-        "startDate": nextMatch.datetime,
-        "location": {
+        name: `Deportivo Morón vs ${nextMatch.versus}`,
+        startDate: nextMatch.datetime,
+        location: {
           "@type": "Place",
-          "name": nextMatch.estadio || "Estadio a confirmar"
+          name: nextMatch.estadio || "Estadio a confirmar",
         },
-        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "performer": [
-          { "@type": "SportsTeam", "name": "Deportivo Morón" },
-          { "@type": "SportsTeam", "name": nextMatch.versus }
+        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        eventStatus: "https://schema.org/EventScheduled",
+        performer: [
+          { "@type": "SportsTeam", name: "Deportivo Morón" },
+          { "@type": "SportsTeam", name: nextMatch.versus },
         ],
-        "description": `Próximo partido: Deportivo Morón vs ${nextMatch.versus} el ${new Date(nextMatch.datetime).toLocaleDateString("es-AR")}`
+        description: `Próximo partido: Deportivo Morón vs ${
+          nextMatch.versus
+        } el ${new Date(nextMatch.datetime).toLocaleDateString("es-AR")}`,
       }
     : null;
 
@@ -59,7 +61,10 @@ export default function Home() {
           content="Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados y más sobre el Gallo."
         />
         {matchJsonLd && (
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(matchJsonLd) }} />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(matchJsonLd) }}
+          />
         )}
       </Head>
       <main className="lg:ml-10 space-y-6">
@@ -68,9 +73,6 @@ export default function Home() {
             Hoy juega Morón
             <span>{isToday ? "!" : "?"}</span>
           </h1>
-          <p className="text-lg mt-2 text-gray-200 max-w-lg">
-            Enterate cuándo juega el Club Deportivo Morón, próximos partidos y resultados recientes.
-          </p>
         </header>
         <section>
           {nextMatch ? (

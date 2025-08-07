@@ -8,7 +8,7 @@ export function NextMatch({ match }: { match: Match }) {
     <section>
       <article className="flex items-center">
         <img
-          src="https://paladarnegro.net/escudoteca/argentina/primeranacional/png/moron.png"
+          src="/moron.png"
           alt="Club Deportivo Morón"
           className="w-26 sm:w-30 -ml-6"
         />
@@ -28,17 +28,11 @@ export function NextMatch({ match }: { match: Match }) {
             <span>{formattedDate.date}</span>
             <span>{formattedDate.time}hs.</span>
           </div>
-          {match.isAway ? (
-            <span className="sm:text-xl font-semibold flex items-center gap-1">
-              <MapPin size={18} aria-hidden="true" />
-              {match.estadio}
-            </span>
-          ) : (
-            <span className="sm:text-xl font-semibold flex items-center gap-1">
-              <MapPin size={18} aria-hidden="true" />
-              Estadio Nuevo Francisco Urbano
-            </span>
-          )}
+
+          <span className="sm:text-xl font-semibold flex items-center gap-1">
+            <MapPin size={18} aria-hidden="true" />
+            {match.isAway ? match.estadio : "Estadio Nuevo Francisco Urbano"}
+          </span>
         </article>
       </article>
       <footer className="mt-6 flex justify-between font-semibold w-58">
