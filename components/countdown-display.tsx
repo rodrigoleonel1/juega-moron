@@ -29,7 +29,7 @@ export function CountdownDisplay({
   ];
 
   return (
-    <section className="grid grid-cols-4 max-w-lg">
+    <section className="grid grid-cols-4 max-w-lg mt-6">
       {countdownItems.map((item, index) => (
         <article key={index} className="text-center">
           <p className="text-5xl sm:text-6xl font-bold tabular-nums">
