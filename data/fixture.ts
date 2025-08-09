@@ -254,7 +254,7 @@ export const FIXTURE = [
     isAway: false,
     id_escudoteca: "gimnasiamendoza",
     id_prom: "bbjbf",
-    datetime: "2025-08-13T19:00:00",
+    datetime: "2025-08-27T15:30:00",
     ficha_partido: "",
     ficha_rival: "https://www.promiedos.com.ar/team/gimnasia-mendoza/bbjbf",
     streaming: "",
@@ -338,8 +338,8 @@ export const FIXTURE = [
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-estudiantes-rio-cuarto/edceagi",
     ficha_rival:
       "https://www.promiedos.com.ar/team/estudiantes-rio-cuarto/bheaf",
-    result: "",
-    youtube: "",
+    result: "2-1 (G)",
+    youtube: "https://www.youtube.com/watch?v=H3Izt4Q4d4Y",
     estadio: "Estadio Ciudad de Río Cuarto",
   },
   {
@@ -347,7 +347,7 @@ export const FIXTURE = [
     isAway: true,
     id_escudoteca: "talleresre",
     id_prom: "bbijj",
-    datetime: "2025-08-23T16:00:00",
+    datetime: "2025-08-23T15:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/talleres-re-vs-deportivo-moron/edceaei",
     ficha_rival: "https://www.promiedos.com.ar/team/talleres-re/bbijj",

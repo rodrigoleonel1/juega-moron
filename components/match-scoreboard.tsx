@@ -106,7 +106,7 @@ export default function MatchScoreboard({
   const [homeScore, awayScore] = game.scores || [0, 0];
 
   return (
-    <div className="w-full max-w-lg p-4 bg-black/70 rounded-md shadow-md space-y-4">
+    <div className="w-full max-w-lg p-4 bg-black/70 rounded-md shadow-md space-y-4 mt-6">
       {/* Header con información de la liga */}
       <div className=" flex items-center justify-between rounded-md ">
         <h2 className="font-semibold">
