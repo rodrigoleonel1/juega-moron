@@ -347,7 +347,7 @@ export const FIXTURE = [
     isAway: true,
     id_escudoteca: "talleresre",
     id_prom: "bbijj",
-    datetime: "2025-08-23T15:30:00",
+    datetime: "2025-08-16T15:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/talleres-re-vs-deportivo-moron/edceaei",
     ficha_rival: "https://www.promiedos.com.ar/team/talleres-re/bbijj",
@@ -360,7 +360,7 @@ export const FIXTURE = [
     isAway: false,
     id_escudoteca: "nueva_chicago",
     id_prom: "bcai",
-    datetime: "2025-08-30T17:15:00",
+    datetime: "2025-08-23T15:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-nueva-chicago/edceadi",
     ficha_rival: "https://www.promiedos.com.ar/team/nueva-chicago/bcai",
