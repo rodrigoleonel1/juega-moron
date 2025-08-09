@@ -70,8 +70,7 @@ export default function Home() {
       <main className="lg:ml-10 space-y-6">
         <header>
           <h1 className="font-bold tracking-tighter text-6xl sm:text-8xl mt-6 max-w-xl">
-            Hoy juega Morón
-            <span>{isToday ? "!" : "?"}</span>
+            Hoy juega Morón?
           </h1>
         </header>
         <section>
