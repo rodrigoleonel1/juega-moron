@@ -333,7 +333,7 @@ export const FIXTURE = [
     isAway: false,
     id_escudoteca: "estudiantesrc",
     id_prom: "bheaf",
-    datetime: "2025-08-09T19:00:00",
+    datetime: "2025-08-09T15:30:00",
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-estudiantes-rio-cuarto/edceagi",
     ficha_rival:
