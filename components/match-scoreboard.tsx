@@ -95,8 +95,18 @@ export default function MatchScoreboard({
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) return <p>Cargando datos del partido...</p>;
-  if (error) return <p>No se pudieron obtener los datos del partido.</p>;
+  if (loading)
+    return (
+      <div className="flex justify-center mt-6 max-w-lg">
+        <div className="w-8 h-8 border-4 border-t-red-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  if (error)
+    return (
+      <p className="mt-6 bg-black/70 max-w-lg p-2 rounded-md text-center">
+        No se pudieron obtener los datos del partido.
+      </p>
+    );
   if (!gameData) {
     return null;
   }
