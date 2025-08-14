@@ -26,10 +26,7 @@ export default function Home() {
   }, []);
 
   const countdown = useCountdown(countdownTargetDate);
-  const isToday =
-    nextMatch && new Date(nextMatch.datetime).getDay() === new Date().getDay();
 
-  // Datos estructurados para el próximo partido (si existe)
   const matchJsonLd = nextMatch
     ? {
         "@context": "https://schema.org",
