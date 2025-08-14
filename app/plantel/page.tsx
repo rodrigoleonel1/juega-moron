@@ -76,7 +76,7 @@ export default function PlantelPage() {
                       : "none"
                   }
                   onClick={() => handleSort(header)}
-                  className="px-4 py-2 capitalize cursor-pointer select-none hover:bg-gray-200 transition w-32 text-center"
+                  className="px-2 py-2 capitalize cursor-pointer select-none hover:bg-gray-200 transition text-center font-medium"
                 >
                   {header.replace("_", " ")}
                   <span aria-hidden="true">
@@ -90,7 +90,7 @@ export default function PlantelPage() {
             {sortedPlayers.map((player, index) => (
               <tr key={player.nombre} className={index % 2 === 0 ? "bg-black/70" : "bg-black/80"}>
                 {headers.map((key) => (
-                  <td key={key} className="px-4 py-2 text-center">
+                  <td key={key} className="px-2 py-2 text-center">
                     {player[key]}
                   </td>
                 ))}
