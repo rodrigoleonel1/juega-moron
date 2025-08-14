@@ -1,20 +1,39 @@
+"use client";
+
 import Link from "next/link";
 
-export default function NavItem({ name, url }: { name: string; url: string }) {
+interface NavItemProps {
+  item: { name: string; url: string };
+  index: number;
+  isActive: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  ref: (el: HTMLDivElement | null) => void;
+}
+
+export function NavItem({
+  item,
+  index,
+  isActive,
+  onMouseEnter,
+  onMouseLeave,
+  ref,
+}: NavItemProps) {
   return (
-    <li>
-      <Link href={url}>
-        <div className="group relative cursor-pointer rounded-md hover:bg-black/60 transition-all px-2">
-          <div className="relative overflow-hidden">
-            <span className="block transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
-              {name}
-            </span>
-            <span className="absolute inset-0 transform translate-y-0 group-hover:-translate-y-full transition-transform duration-500 ease-out">
-              {name}
-            </span>
-          </div>
-        </div>
+    <div
+      ref={ref}
+      className={`px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
+        isActive ? "text-white" : "text-gray-300"
+      }`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <Link
+        href={item.url}
+        className="text-sm flex items-center justify-center h-full font-semibold"
+      >
+        {item.name}
       </Link>
-    </li>
+    </div>
   );
 }
