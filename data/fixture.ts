@@ -350,8 +350,8 @@ export const FIXTURE = [
     ficha_partido:
       "https://www.promiedos.com.ar/game/talleres-re-vs-deportivo-moron/edceaei",
     ficha_rival: "https://www.promiedos.com.ar/team/talleres-re/bbijj",
-    result: "",
-    youtube: "",
+    result: "1-2 (P)",
+    youtube: "https://www.youtube.com/watch?v=myDkxMm5RSQ",
     estadio: "Estadio Pablo Comelli",
   },
   {
