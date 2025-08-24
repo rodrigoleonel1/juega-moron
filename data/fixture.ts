@@ -363,8 +363,8 @@ export const FIXTURE = [
     ficha_partido:
       "https://www.promiedos.com.ar/game/deportivo-moron-vs-nueva-chicago/edceadi",
     ficha_rival: "https://www.promiedos.com.ar/team/nueva-chicago/bcai",
-    result: "",
-    youtube: "",
+    result: "1-0 (G)",
+    youtube: "https://www.youtube.com/watch?v=iFwOixfaw3E",
     estadio: "Estadio República de Mataderos",
   },
   {
@@ -466,7 +466,7 @@ export function getNextMatch(): Match | null {
 
   const upcomingMatches = FIXTURE.filter((match) => {
     const matchTime = new Date(match.datetime);
-    const matchEndTime = new Date(matchTime.getTime() + 105 * 60 * 1000);
+    const matchEndTime = new Date(matchTime.getTime() + 120 * 60 * 1000);
 
     return (
       !match.result &&
