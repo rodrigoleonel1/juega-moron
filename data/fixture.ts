@@ -257,8 +257,8 @@ export const FIXTURE = [
     datetime: "2025-08-27T21:10:00",
     ficha_partido: "",
     ficha_rival: "https://www.promiedos.com.ar/team/gimnasia-mendoza/bbjbf",
-    youtube: "",
-    result: "",
+    youtube: "https://www.youtube.com/watch?v=ZS-MnO8PEuk",
+    result: "1-0 (G)",
     estadio: "Estadio Víctor Antonio Legrotaglie",
   },
   {
