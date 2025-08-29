@@ -255,7 +255,7 @@ export const FIXTURE = [
     id_escudoteca: "gimnasiamendoza",
     id_prom: "bbjbf",
     datetime: "2025-08-27T21:10:00",
-    ficha_partido: "",
+    ficha_partido: "https://www.promiedos.com.ar/game/deportivo-moron-vs-gimnasia-mendoza/efdfaee",
     ficha_rival: "https://www.promiedos.com.ar/team/gimnasia-mendoza/bbjbf",
     youtube: "https://www.youtube.com/watch?v=ZS-MnO8PEuk",
     result: "1-0 (G)",
