@@ -8,7 +8,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "9",
     valla_invicta: "9",
-    amarrillas: "3",
+    amarillas: "3",
     rojas: "0",
   },
   {
@@ -20,7 +20,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "4",
     valla_invicta: "4",
-    amarrillas: "0",
+    amarillas: "0",
     rojas: "0",
   },
   {
@@ -32,7 +32,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "9",
+    amarillas: "9",
     rojas: "1",
   },
   {
@@ -44,7 +44,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "0",
+    amarillas: "0",
     rojas: "0",
   },
   {
@@ -56,7 +56,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "4",
+    amarillas: "4",
     rojas: "1",
   },
   {
@@ -68,7 +68,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "0",
+    amarillas: "0",
     rojas: "0",
   },
   {
@@ -80,7 +80,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "1",
+    amarillas: "1",
     rojas: "1",
   },
   {
@@ -92,7 +92,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "1",
+    amarillas: "1",
     rojas: "0",
   },
   {
@@ -104,7 +104,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "1",
+    amarillas: "1",
     rojas: "0",
   },
   {
@@ -116,7 +116,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "5",
+    amarillas: "5",
     rojas: "0",
   },
   {
@@ -128,7 +128,7 @@ export const PLANTEL = [
     asistencias: "3",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "4",
+    amarillas: "4",
     rojas: "0",
   },
   {
@@ -140,7 +140,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "1",
+    amarillas: "1",
     rojas: "0",
   },
   {
@@ -152,7 +152,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "1",
+    amarillas: "1",
     rojas: "0",
   },
   {
@@ -164,7 +164,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "2",
+    amarillas: "2",
     rojas: "0",
   },
   {
@@ -176,7 +176,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "2",
+    amarillas: "2",
     rojas: "0",
   },
   {
@@ -188,7 +188,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "0",
+    amarillas: "0",
     rojas: "0",
   },
   {
@@ -200,7 +200,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "2",
+    amarillas: "2",
     rojas: "0",
   },
   {
@@ -212,7 +212,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "4",
+    amarillas: "4",
     rojas: "2",
   },
   {
@@ -224,7 +224,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "8",
+    amarillas: "8",
     rojas: "1",
   },
   {
@@ -236,7 +236,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "4",
+    amarillas: "4",
     rojas: "2",
   },
   {
@@ -248,7 +248,7 @@ export const PLANTEL = [
     asistencias: "3",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "1",
+    amarillas: "1",
     rojas: "0",
   },
   {
@@ -260,7 +260,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "2",
+    amarillas: "2",
     rojas: "1",
   },
   {
@@ -272,7 +272,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "0",
+    amarillas: "0",
     rojas: "0",
   },
   {
@@ -284,7 +284,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "0",
+    amarillas: "0",
     rojas: "0",
   },
   {
@@ -296,7 +296,7 @@ export const PLANTEL = [
     asistencias: "1",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "2",
+    amarillas: "2",
     rojas: "1",
   },
   {
@@ -308,7 +308,7 @@ export const PLANTEL = [
     asistencias: "0",
     goles_concedidos: "0",
     valla_invicta: "0",
-    amarrillas: "0",
+    amarillas: "0",
     rojas: "0",
   },
 ];
@@ -322,6 +322,71 @@ export interface Player {
   asistencias: string;
   goles_concedidos: string;
   valla_invicta: string;
-  amarrillas: string;
+  amarillas: string;
   rojas: string;
+}
+
+const api = {
+  match: {
+    list: async (): Promise<Player[]> => {
+      return fetch(
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZR1t0ec_s29rlpfegjpAxwk53Pr8M4Vho_iXtJvA0xom5P3-dBvGeIFpQBep2Lfm1OSAGSdZpi3NP/pub?output=tsv"
+      )
+        .then((res) => res.text())
+        .then((text) => {
+          return text
+            .split("\n")
+            .slice(1)
+            .map((row) => {
+              const [
+                nombre,
+                posicion,
+                edad,
+                partidos,
+                goles,
+                asistencias,
+                goles_concedidos,
+                valla_invicta,
+                amarillas,
+                rojas,
+              ] = row.split("\t");
+
+              return {
+                nombre,
+                posicion,
+                edad,
+                partidos,
+                goles,
+                asistencias,
+                goles_concedidos,
+                valla_invicta,
+                amarillas,
+                rojas,
+              };
+            });
+        });
+    },
+  },
+};
+
+export async function getPlantel(): Promise<Player[]> {
+  try {
+    const data = await api.match.list();
+
+    return [...data];
+  } catch (error) {
+    console.error("Error al obtener partidos recientes:", error);
+    return Array().fill({
+      nombre: "",
+      posicion: "",
+      edad: "",
+      partidos: "",
+      goles: "",
+      asistencias: "",
+      goles_concedidos: "",
+      valla_invicta: "",
+      amarillas: "",
+      rojas: "",
+    });
+  }
 }

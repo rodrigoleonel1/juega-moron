@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { PLANTEL, Player } from "@/data/plantel";
+import { useEffect, useState } from "react";
+import { getPlantel, PLANTEL, Player } from "@/data/plantel";
 
 const POSICION_ORDER: Record<string, number> = {
   ARQ: 1,
@@ -21,12 +21,22 @@ export default function PlantelPage() {
     "asistencias",
     "goles_concedidos",
     "valla_invicta",
-    "amarrillas",
+    "amarillas",
     "rojas",
   ];
 
+  const [plantel, setPlantel] = useState<Player[]>([]);
   const [sortKey, setSortKey] = useState<keyof Player>("posicion");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const plantel = await getPlantel();
+      setPlantel(plantel);
+    };
+
+    fetchData();
+  }, []);
 
   const handleSort = (key: keyof Player) => {
     if (key === sortKey) {
@@ -37,10 +47,9 @@ export default function PlantelPage() {
     }
   };
 
-  const sortedPlayers = [...PLANTEL].sort((a, b) => {
+  const sortedPlayers = plantel.sort((a, b) => {
     let aVal: string | number = a[sortKey];
     let bVal: string | number = b[sortKey];
-
 
     if (sortKey === "posicion") {
       aVal = POSICION_ORDER[a.posicion] || 999;
@@ -80,7 +89,11 @@ export default function PlantelPage() {
                 >
                   {header.replace("_", " ")}
                   <span aria-hidden="true">
-                    {sortKey === header ? (sortOrder === "asc" ? " ↑" : " ↓") : " "}
+                    {sortKey === header
+                      ? sortOrder === "asc"
+                        ? " ↑"
+                        : " ↓"
+                      : " "}
                   </span>
                 </th>
               ))}
@@ -88,7 +101,10 @@ export default function PlantelPage() {
           </thead>
           <tbody>
             {sortedPlayers.map((player, index) => (
-              <tr key={player.nombre} className={index % 2 === 0 ? "bg-black/70" : "bg-black/80"}>
+              <tr
+                key={player.nombre}
+                className={index % 2 === 0 ? "bg-black/70" : "bg-black/80"}
+              >
                 {headers.map((key) => (
                   <td key={key} className="px-2 py-2 text-center">
                     {player[key]}
