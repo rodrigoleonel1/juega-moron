@@ -23,7 +23,7 @@ export function useCountdown(targetDate: Date): TimeLeft {
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const matchStart = targetDate.getTime();
-      const matchEnd = matchStart + 100 * 60 * 1000; // 100 minutos después del inicio
+      const matchEnd = matchStart + 100 * 60 * 1000;
       const distance = matchStart - now;
 
       // Verificar si el partido está en vivo (entre inicio y 100 minutos después)

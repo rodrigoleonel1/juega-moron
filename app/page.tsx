@@ -1,37 +1,13 @@
-"use client";
-
-import { getNextMatch, getRecentMatches, Match } from "@/data/fixture";
-import { useEffect, useState } from "react";
 import Head from "next/head";
-import { useCountdown } from "@/hooks/use-countdown";
-import { CountdownDisplay } from "@/components/countdown-display";
 import { RecentMatches } from "@/components/recent-matches";
 import { NextMatch } from "@/components/next-match";
+import { getNextMatch } from "@/actions/getNextMatch";
+import { getRecentMatches } from "@/actions/getRecentMatches";
+import { CountdownDisplay } from "@/components/countdown-display";
 
-export default function Home() {
-  const [nextMatch, setNextMatch] = useState<Match | null>(null);
-  const [recentMatches, setRecentMatches] = useState<Match[]>([]);
-  const [countdownTargetDate, setCountdownTargetDate] = useState(new Date());
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedNextMatch = await getNextMatch();
-      setNextMatch(fetchedNextMatch);
-
-      const recentMatchesData = await getRecentMatches(5);
-      setRecentMatches(recentMatchesData);
-
-      if (fetchedNextMatch) {
-        setCountdownTargetDate(new Date(fetchedNextMatch.datetime));
-      } else {
-        setCountdownTargetDate(new Date(0));
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const countdown = useCountdown(countdownTargetDate);
+export default async function Home() {
+  const nextMatch = await getNextMatch();
+  const recentMatches = await getRecentMatches(5);
 
   const matchJsonLd = nextMatch
     ? {
@@ -81,7 +57,7 @@ export default function Home() {
             <>
               <NextMatch match={nextMatch} />
               <CountdownDisplay
-                {...countdown}
+                date={nextMatch.datetime}
                 ficha_partido={nextMatch.ficha_partido}
               />
             </>
@@ -92,7 +68,7 @@ export default function Home() {
           )}
         </section>
         <section>
-          <RecentMatches recentMatches={recentMatches} />
+          <RecentMatches recentMatches={recentMatches ?? []} />
         </section>
       </main>
     </>

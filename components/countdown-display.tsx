@@ -2,28 +2,32 @@
 
 import { useEffect, useState } from "react";
 import MatchScoreboard from "./match-scoreboard";
+import { useCountdown } from "@/hooks/use-countdown";
 
 interface CountdownDisplayProps {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  isLive: boolean;
+  date: string;
   ficha_partido: string;
 }
 
 export function CountdownDisplay({
-  days,
-  hours,
-  minutes,
-  seconds,
-  isLive,
+  date,
   ficha_partido,
 }: CountdownDisplayProps) {
+  const [countdownTargetDate, setCountdownTargetDate] = useState(new Date());
   const [live, setLive] = useState(false);
 
+  const countdown = useCountdown(countdownTargetDate);
+
   useEffect(() => {
-    if (isLive) {
+    const fetchData = async () => {
+      setCountdownTargetDate(new Date(date));
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (countdown.isLive) {
       const timer = setTimeout(() => {
         setLive(true);
       }, 2000);
@@ -32,17 +36,17 @@ export function CountdownDisplay({
     } else {
       setLive(false);
     }
-  }, [isLive]);
+  }, [countdown.isLive]);
 
   if (live) {
     return <MatchScoreboard ficha_partido={ficha_partido} />;
   }
 
   const countdownItems = [
-    { value: days.toString().padStart(2, "0"), label: "Días" },
-    { value: hours.toString().padStart(2, "0"), label: "Horas" },
-    { value: minutes.toString().padStart(2, "0"), label: "Minutos" },
-    { value: seconds.toString().padStart(2, "0"), label: "Segundos" },
+    { value: countdown.days.toString().padStart(2, "0"), label: "Días" },
+    { value: countdown.hours.toString().padStart(2, "0"), label: "Horas" },
+    { value: countdown.minutes.toString().padStart(2, "0"), label: "Minutos" },
+    { value: countdown.seconds.toString().padStart(2, "0"), label: "Segundos" },
   ];
 
   return (
