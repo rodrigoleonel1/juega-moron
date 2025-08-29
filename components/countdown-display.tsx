@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import MatchScoreboard from "./match-scoreboard";
 
 interface CountdownDisplayProps {
@@ -17,7 +20,21 @@ export function CountdownDisplay({
   isLive,
   ficha_partido,
 }: CountdownDisplayProps) {
-  if (isLive) {
+  const [live, setLive] = useState(false);
+
+  useEffect(() => {
+    if (isLive) {
+      const timer = setTimeout(() => {
+        setLive(true);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setLive(false);
+    }
+  }, [isLive]);
+
+  if (live) {
     return <MatchScoreboard ficha_partido={ficha_partido} />;
   }
 

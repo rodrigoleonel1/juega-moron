@@ -255,7 +255,8 @@ export const FIXTURE = [
     id_escudoteca: "gimnasiamendoza",
     id_prom: "bbjbf",
     datetime: "2025-08-27T21:10:00",
-    ficha_partido: "https://www.promiedos.com.ar/game/deportivo-moron-vs-gimnasia-mendoza/efdfaee",
+    ficha_partido:
+      "https://www.promiedos.com.ar/game/deportivo-moron-vs-gimnasia-mendoza/efdfaee",
     ficha_rival: "https://www.promiedos.com.ar/team/gimnasia-mendoza/bbjbf",
     youtube: "https://www.youtube.com/watch?v=ZS-MnO8PEuk",
     result: "1-0 (G)",
@@ -461,32 +462,158 @@ export interface Match {
   result?: string;
 }
 
-export function getNextMatch(): Match | null {
-  const now = new Date();
+// export function getNextMatch(): Match | null {
+//   const now = new Date();
 
-  const upcomingMatches = FIXTURE.filter((match) => {
-    const matchTime = new Date(match.datetime);
-    const matchEndTime = new Date(matchTime.getTime() + 120 * 60 * 1000);
+//   const upcomingMatches = FIXTURE.filter((match) => {
+//     const matchTime = new Date(match.datetime);
+//     const matchEndTime = new Date(matchTime.getTime() + 120 * 60 * 1000);
 
-    return (
-      !match.result &&
-      (matchTime > now || (now >= matchTime && now <= matchEndTime))
+//     return (
+//       !match.result &&
+//       (matchTime > now || (now >= matchTime && now <= matchEndTime))
+//     );
+//   }).sort(
+//     (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+//   );
+
+//   return upcomingMatches.length > 0 ? upcomingMatches[0] : null;
+// }
+
+// export function getRecentMatches(limit = 5): Match[] {
+//   return FIXTURE.filter((match) => match.result)
+//     .sort(
+//       (a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+//     )
+//     .slice(0, limit);
+// }
+
+// export function getMatches(): Match[] {
+//   return FIXTURE;
+// }
+
+const api = {
+  match: {
+    list: async (): Promise<Match[]> => {
+      return fetch(
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6fCbDDYrrzkc0z-w5J12AZ4pcA6HUAoSb-9AF4ETycvpCQozKe0DuQrvdr6BZcsqNrB1iuu6FOT_a/pub?output=tsv"
+      )
+        .then((res) => res.text())
+        .then((text) => {
+          return text
+            .split("\n")
+            .slice(1)
+            .map((row) => {
+
+              const [
+                versus,
+                isAway,
+                id_escudoteca,
+                id_prom,
+                datetime,
+                ficha_partido,
+                ficha_rival,
+                youtube,
+                result,
+                estadio,
+              ] = row.split("\t");
+
+              return {
+                versus,
+                isAway: isAway === "TRUE" ? true : false,
+                id_escudoteca,
+                id_prom,
+                datetime,
+                ficha_partido,
+                ficha_rival,
+                youtube,
+                result,
+                estadio,
+              };
+            });
+        });
+    },
+  },
+};
+
+export async function getMatches(): Promise<Match[]> {
+  try {
+    const data = await api.match.list();
+
+    return [...data];
+  } catch (error) {
+    console.error("Error al obtener partidos recientes:", error);
+    return Array().fill({
+      versus: "",
+      estadio: "",
+      isAway: false,
+      id_escudoteca: "",
+      id_prom: "",
+      datetime: "",
+      ficha_partido: "",
+      ficha_rival: "",
+      youtube: "",
+      result: "",
+    });
+  }
+}
+
+export async function getRecentMatches(limit = 5): Promise<Match[]> {
+  try {
+    const data = await api.match.list();
+
+    const playedMatches = data.filter(
+      (match) => match.result && match.result.trim() !== ""
     );
-  }).sort(
-    (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-  );
 
-  return upcomingMatches.length > 0 ? upcomingMatches[0] : null;
-}
-
-export function getRecentMatches(limit = 5): Match[] {
-  return FIXTURE.filter((match) => match.result)
-    .sort(
+    const sortedMatches = playedMatches.sort(
       (a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
-    )
-    .slice(0, limit);
+    );
+
+    return sortedMatches.slice(0, limit);
+  } catch (error) {
+    console.error("Error al obtener partidos recientes:", error);
+
+    return Array(limit).fill({
+      versus: "",
+      estadio: "",
+      isAway: false,
+      id_escudoteca: "",
+      id_prom: "",
+      datetime: "",
+      ficha_partido: "",
+      ficha_rival: "",
+      youtube: "",
+      result: "",
+    });
+  }
 }
 
-export function getMatches(): Match[] {
-  return FIXTURE;
+export async function getNextMatch(): Promise<Match | null> {
+  try {
+    const data = await api.match.list();
+
+    const now = new Date();
+
+    const upcomingMatches = data
+      .filter((match) => {
+        const matchTime = new Date(match.datetime);
+        const matchEndTime = new Date(matchTime.getTime() + 120 * 60 * 1000);
+
+        return (
+          !match.result &&
+          (matchTime > now || (now >= matchTime && now <= matchEndTime))
+        );
+      })
+
+      .sort(
+        (a, b) =>
+          new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+      );
+
+    return upcomingMatches.length > 0 ? upcomingMatches[0] : null;
+  } catch (error) {
+    console.error("Error al obtener el próximo partido:", error);
+    return null;
+  }
 }

@@ -19,7 +19,7 @@ export function NextMatch({ match }: { match: Match }) {
               <img
                 src={`https://api.promiedos.com.ar/images/team/${match.id_prom}/1`}
                 alt={match.versus}
-                className="hidden h-8 w-8 align-middle sm:inline ml-1"
+                className="h-8 w-8 align-middle inline ml-1"
               />
             </span>
           </div>

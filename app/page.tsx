@@ -14,15 +14,21 @@ export default function Home() {
   const [countdownTargetDate, setCountdownTargetDate] = useState(new Date());
 
   useEffect(() => {
-    const fetchedNextMatch = getNextMatch();
-    setNextMatch(fetchedNextMatch);
-    setRecentMatches(getRecentMatches(5));
+    const fetchData = async () => {
+      const fetchedNextMatch = await getNextMatch();
+      setNextMatch(fetchedNextMatch);
 
-    if (fetchedNextMatch) {
-      setCountdownTargetDate(new Date(fetchedNextMatch.datetime));
-    } else {
-      setCountdownTargetDate(new Date(0));
-    }
+      const recentMatchesData = await getRecentMatches(5);
+      setRecentMatches(recentMatchesData);
+
+      if (fetchedNextMatch) {
+        setCountdownTargetDate(new Date(fetchedNextMatch.datetime));
+      } else {
+        setCountdownTargetDate(new Date(0));
+      }
+    };
+
+    fetchData();
   }, []);
 
   const countdown = useCountdown(countdownTargetDate);

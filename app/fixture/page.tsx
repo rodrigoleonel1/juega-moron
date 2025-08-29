@@ -1,42 +1,80 @@
 "use client";
-import { useState } from "react";
-import { FIXTURE, type Match } from "@/data/fixture";
+
+import { useEffect, useState } from "react";
+import { getMatches, type Match } from "@/data/fixture";
 import { FixtureCard } from "@/components/fixture-card";
 import { Search } from "lucide-react";
 
 export default function FixturePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredAndSortedFixtures = FIXTURE.filter((match) => {
-    const matchDate = new Date(match.datetime);
-    const now = new Date();
-    const isPlayed = !!match.result;
-    const isUpcoming = !isPlayed && matchDate > now;
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-    // Filter by search term
-    const matchesSearch = match.versus
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+        const recent = await getMatches();
 
-    // Filter by status
-    let matchesStatus = true;
-    if (filterStatus === "played") {
-      matchesStatus = isPlayed;
-    } else if (filterStatus === "upcoming") {
-      matchesStatus = isUpcoming;
-    } else if (filterStatus === "won") {
-      matchesStatus = match.result?.includes("(G)") || false;
-    } else if (filterStatus === "lost") {
-      matchesStatus = match.result?.includes("(P)") || false;
-    } else if (filterStatus === "drawn") {
-      matchesStatus = match.result?.includes("(E)") || false;
-    }
+        setMatches(recent);
+      } catch (err) {
+        console.error(err);
+        setError("Hubo un error al cargar los partidos");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return matchesSearch && matchesStatus;
-  }).sort(
-    (a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
-  );
+    fetchMatches();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center mt-6 w-full h-screen">
+        <div className="w-8 h-8 border-4 border-t-red-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
+
+  const filteredAndSortedFixtures = matches
+    .filter((match) => {
+      const matchDate = new Date(match.datetime);
+      const now = new Date();
+      const isPlayed = !!match.result;
+      const isUpcoming = !isPlayed && matchDate > now;
+
+      // Filter by search term
+      const matchesSearch = match.versus
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      // Filter by status
+      let matchesStatus = true;
+      if (filterStatus === "played") {
+        matchesStatus = isPlayed;
+      } else if (filterStatus === "upcoming") {
+        matchesStatus = isUpcoming;
+      } else if (filterStatus === "won") {
+        matchesStatus = match.result?.includes("(G)") || false;
+      } else if (filterStatus === "lost") {
+        matchesStatus = match.result?.includes("(P)") || false;
+      } else if (filterStatus === "drawn") {
+        matchesStatus = match.result?.includes("(E)") || false;
+      }
+
+      return matchesSearch && matchesStatus;
+    })
+    .sort(
+      (a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+    );
 
   return (
     <>
