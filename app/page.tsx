@@ -57,8 +57,8 @@ export default async function Home() {
             <>
               <NextMatch match={nextMatch} />
               <CountdownDisplay
-                date={nextMatch.datetime}
-                ficha_partido={nextMatch.ficha_partido}
+                match_date={nextMatch.datetime}
+                match_sheet={nextMatch.ficha_partido}
               />
             </>
           ) : (

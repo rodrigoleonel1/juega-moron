@@ -1,45 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import MatchScoreboard from "./match-scoreboard";
 import { useCountdown } from "@/hooks/use-countdown";
 
 interface CountdownDisplayProps {
-  date: string;
-  ficha_partido: string;
+  match_date: string;
+  match_sheet: string;
 }
 
 export function CountdownDisplay({
-  date,
-  ficha_partido,
+  match_date,
+  match_sheet,
 }: CountdownDisplayProps) {
-  const [countdownTargetDate, setCountdownTargetDate] = useState(new Date());
-  const [live, setLive] = useState(false);
+  const countdown = useCountdown(new Date(match_date));
 
-  const countdown = useCountdown(countdownTargetDate);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setCountdownTargetDate(new Date(date));
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (countdown.isLive) {
-      const timer = setTimeout(() => {
-        setLive(true);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    } else {
-      setLive(false);
-    }
-  }, [countdown.isLive]);
-
-  if (live) {
-    return <MatchScoreboard ficha_partido={ficha_partido} />;
+  if (countdown.isLive) {
+    return <MatchScoreboard match_sheet={match_sheet} />;
   }
 
   const countdownItems = [

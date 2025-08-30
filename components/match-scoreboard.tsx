@@ -50,15 +50,15 @@ interface GameData {
 }
 
 export default function MatchScoreboard({
-  ficha_partido,
+  match_sheet,
 }: {
-  ficha_partido: string;
+  match_sheet: string;
 }) {
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const url = ficha_partido;
+  const url = match_sheet;
   const parts = url.split("/");
   const id = parts[parts.length - 1];
 
