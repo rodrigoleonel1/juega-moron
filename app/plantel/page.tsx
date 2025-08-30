@@ -6,7 +6,7 @@ export default async function PlantelPage() {
 
   return (
     <>
-      <h2 className="text-2xl font-semibold">Fixture temporada 2025</h2>
+      <h2 className="text-2xl font-semibold">Plantel temporada 2025</h2>
       <div className="md:mx-auto space-y-4">
         <div className="overflow-x-auto">
           <Plantel players={plantel} />
