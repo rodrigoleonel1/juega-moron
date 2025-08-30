@@ -1,9 +1,9 @@
 import { Match } from "@/lib/types";
 
-
 export const getMatches = async (): Promise<Match[]> => {
   const res = await fetch(
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6fCbDDYrrzkc0z-w5J12AZ4pcA6HUAoSb-9AF4ETycvpCQozKe0DuQrvdr6BZcsqNrB1iuu6FOT_a/pub?output=tsv"
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6fCbDDYrrzkc0z-w5J12AZ4pcA6HUAoSb-9AF4ETycvpCQozKe0DuQrvdr6BZcsqNrB1iuu6FOT_a/pub?output=tsv",
+    { next: { tags: ["matches"] } }
   );
 
   if (!res.ok) {
