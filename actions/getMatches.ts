@@ -6,7 +6,7 @@ export const getMatches = async (): Promise<Match[]> => {
   );
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch products: ${res.statusText}`);
+    throw new Error(`Failed to fetch matches: ${res.statusText}`);
   }
 
   const data = await res.text();
