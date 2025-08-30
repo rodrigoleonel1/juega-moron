@@ -1,9 +1,9 @@
 "use client";
 
-import { Match } from "@/data/fixture";
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { FixtureCard } from "@/components/fixture-card";
+import { Match } from "@/lib/types";
 
 interface MatchesProps {
   matches: Match[];

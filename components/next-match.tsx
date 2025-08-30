@@ -1,4 +1,4 @@
-import { Match } from "@/data/fixture";
+import { Match } from "@/lib/types";
 import { formatMatchDate } from "@/lib/utils";
 import { Calendar, MapPin } from "lucide-react";
 

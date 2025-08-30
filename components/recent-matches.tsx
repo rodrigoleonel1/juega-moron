@@ -1,5 +1,5 @@
+import { Match } from "@/lib/types";
 import { getResultTextColor } from "@/lib/utils";
-import { Match } from "@/data/fixture";
 import { Plane, Home } from "lucide-react";
 
 export function RecentMatches({ recentMatches }: { recentMatches: Match[] }) {

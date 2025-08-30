@@ -8,7 +8,6 @@ const navItems = [
   { name: "Inicio", url: "/" },
   { name: "Fixture", url: "/fixture" },
   { name: "Plantel", url: "/plantel" },
-  // { name: "Posiciones", url: "/posiciones" },
 ];
 
 export function Header() {

@@ -1,7 +1,7 @@
 "use client";
 
+import { Player } from "@/lib/types";
 import { useState } from "react";
-import { Player } from "@/data/plantel";
 
 const POSICION_ORDER: Record<string, number> = {
   ARQ: 1,
@@ -56,9 +56,6 @@ export default function Plantel({ players }: { players: Player[] }) {
 
   return (
     <table className="shadow-md rounded-md text-sm w-full">
-      <caption className="text-2xl font-semibold text-left p-2 mb-2">
-        Plantel temporada 2025
-      </caption>
       <thead className="bg-white text-gray-700">
         <tr>
           {headers.map((header) => (
@@ -73,7 +70,7 @@ export default function Plantel({ players }: { players: Player[] }) {
                   : "none"
               }
               onClick={() => handleSort(header)}
-              className="px-2 py-2 capitalize cursor-pointer select-none hover:bg-gray-200 transition text-center font-medium"
+              className="px-2 py-2 capitalize cursor-pointer select-none hover:bg-gray-200 transition font-medium"
             >
               {header.replace("_", " ")}
               <span aria-hidden="true">
@@ -90,7 +87,7 @@ export default function Plantel({ players }: { players: Player[] }) {
             className={index % 2 === 0 ? "bg-black/70" : "bg-black/80"}
           >
             {headers.map((key) => (
-              <td key={key} className="px-2 py-2 text-center">
+              <td key={key} className="px-2 py-2">
                 {player[key]}
               </td>
             ))}

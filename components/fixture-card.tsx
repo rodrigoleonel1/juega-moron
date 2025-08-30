@@ -1,6 +1,6 @@
 import { Calendar, Clock, Home, Plane } from "lucide-react";
-import { Match } from "@/data/fixture";
 import { formatMatchDateFull, getResultBgColor } from "@/lib/utils";
+import { Match } from "@/lib/types";
 
 export function FixtureCard({ match }: { match: Match }) {
   const formatted = formatMatchDateFull(match.datetime);
