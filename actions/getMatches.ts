@@ -1,4 +1,5 @@
-import { Match } from "@/data/fixture";
+import { Match } from "@/lib/types";
+
 
 export const getMatches = async (): Promise<Match[]> => {
   const res = await fetch(

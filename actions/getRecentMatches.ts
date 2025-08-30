@@ -1,4 +1,4 @@
-import { Match } from "@/data/fixture";
+import { Match } from "@/lib/types";
 import { getMatches } from "./getMatches";
 
 export const getRecentMatches = async (limit = 5): Promise<Match[] | null> => {

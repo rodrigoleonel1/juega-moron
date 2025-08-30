@@ -1,4 +1,4 @@
-import { Player } from "@/data/plantel";
+import { Player } from "@/lib/types";
 
 export const getPlantel = async (): Promise<Player[]> => {
   const res = await fetch(
