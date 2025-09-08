@@ -62,24 +62,28 @@ export function FixtureCard({ match }: { match: Match }) {
 
       {match.result ? (
         <footer className="grid gap-2 grid-cols-2">
-          <a
-            href={match.youtube}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Ver resumen del partido contra ${match.versus}`}
-            className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
-          >
-            Resumen
-          </a>
-          <a
-            href={match.ficha_partido}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Ver ficha del partido contra ${match.versus}`}
-            className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
-          >
-            Ficha
-          </a>
+          {match.youtube && (
+            <a
+              href={match.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Ver resumen del partido contra ${match.versus}`}
+              className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
+            >
+              Resumen
+            </a>
+          )}
+          {match.ficha_partido && (
+            <a
+              href={match.ficha_partido}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Ver ficha del partido contra ${match.versus}`}
+              className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
+            >
+              Ficha
+            </a>
+          )}
         </footer>
       ) : (
         <footer className="bg-blue-100 text-blue-700 rounded-md font-semibold p-1 text-center">

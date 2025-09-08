@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, ArrowDown, ArrowUp } from "lucide-react";
 import { FixtureCard } from "@/components/fixture-card";
 import { Match } from "@/lib/types";
 
@@ -12,6 +12,7 @@ interface MatchesProps {
 export default function Matches({ matches }: MatchesProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const filteredAndSortedFixtures = matches
     .filter((match) => {
@@ -41,13 +42,17 @@ export default function Matches({ matches }: MatchesProps) {
 
       return matchesSearch && matchesStatus;
     })
-    .sort(
-      (a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
-    );
+    .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return new Date(a.datetime).getTime() - new Date(b.datetime).getTime();
+      } else {
+        return new Date(b.datetime).getTime() - new Date(a.datetime).getTime();
+      }
+    });
   return (
     <>
       <form
-        className="flex flex-col md:flex-row gap-4 max-w-xl"
+        className="flex flex-col md:flex-row gap-4 max-w-3xl"
         onSubmit={(e) => e.preventDefault()}
       >
         <div className="relative flex-grow">
@@ -74,6 +79,17 @@ export default function Matches({ matches }: MatchesProps) {
           <option value="lost">Perdidos</option>
           <option value="drawn">Empatados</option>
         </select>
+        <button
+          onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+          className="py-2 px-3 rounded-md bg-white text-black  shadow-md flex justify-center items-center"
+        >
+          Ordenar por fecha
+          {sortOrder === "asc" ? (
+            <ArrowUp size={20} />
+          ) : (
+            <ArrowDown size={20} />
+          )}
+        </button>
       </form>
 
       {filteredAndSortedFixtures.length > 0 ? (
