@@ -10,6 +10,30 @@ export const getPlantel = async (): Promise<Player[]> => {
     throw new Error(`Failed to fetch plantel: ${res.statusText}`);
   }
 
+  function calcularEdad(fechaNacimientoStr: string): string {
+    const [diaStr, mesStr, anioStr] = fechaNacimientoStr.split("/");
+    const dia = parseInt(diaStr, 10);
+    const mes = parseInt(mesStr, 10) - 1; // Mes en JS es 0-indexado (0 = enero)
+    const anio = parseInt(anioStr, 10);
+
+    const fechaNacimiento = new Date(anio, mes, dia);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    const mesActual = hoy.getMonth();
+    const diaActual = hoy.getDate();
+
+    if (
+      mesActual < fechaNacimiento.getMonth() ||
+      (mesActual === fechaNacimiento.getMonth() &&
+        diaActual < fechaNacimiento.getDate())
+    ) {
+      edad--;
+    }
+
+    return edad.toString();
+  }
+
   const data = await res.text();
   const plantel = data
     .split("\n")
@@ -31,7 +55,7 @@ export const getPlantel = async (): Promise<Player[]> => {
       return {
         nombre,
         posicion,
-        edad,
+        edad: calcularEdad(edad),
         partidos,
         goles,
         asistencias,
