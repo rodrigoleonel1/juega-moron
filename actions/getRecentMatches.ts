@@ -21,7 +21,6 @@ export const getRecentMatches = async (limit = 5): Promise<Match[] | null> => {
       versus: "",
       estadio: "",
       isAway: false,
-      id_escudoteca: "",
       id_prom: "",
       datetime: "",
       ficha_partido: "",

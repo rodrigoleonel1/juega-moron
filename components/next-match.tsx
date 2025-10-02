@@ -25,6 +25,11 @@ export function NextMatch({ match }: { match: Match }) {
           </div>
           <div className="flex items-center gap-1 font-semibold sm:text-xl">
             <Calendar size={18} aria-hidden="true" />
+            <span>{match.competencia}, </span>
+            <span>{match.fecha}</span>
+          </div>
+          <div className="flex items-center gap-1 font-semibold sm:text-xl">
+            <Calendar size={18} aria-hidden="true" />
             <span>{formattedDate.date}</span>
             <span>{formattedDate.time}hs.</span>
           </div>

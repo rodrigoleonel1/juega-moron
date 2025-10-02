@@ -18,7 +18,6 @@ export const getMatches = async (): Promise<Match[]> => {
       const [
         versus,
         isAway,
-        id_escudoteca,
         id_prom,
         datetime,
         ficha_partido,
@@ -26,12 +25,13 @@ export const getMatches = async (): Promise<Match[]> => {
         youtube,
         result,
         estadio,
+        competencia,
+        fecha,
       ] = row.split("\t");
 
       return {
         versus,
         isAway: isAway === "TRUE" ? true : false,
-        id_escudoteca,
         id_prom,
         datetime,
         ficha_partido,
@@ -39,6 +39,8 @@ export const getMatches = async (): Promise<Match[]> => {
         youtube,
         result,
         estadio,
+        competencia,
+        fecha,
       };
     });
 

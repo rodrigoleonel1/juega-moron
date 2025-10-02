@@ -29,13 +29,14 @@ export const getNextMatch = async (): Promise<Match> => {
           versus: "",
           estadio: "",
           isAway: false,
-          id_escudoteca: "",
           id_prom: "",
           datetime: "",
           ficha_partido: "",
           ficha_rival: "",
           youtube: "",
           result: "",
+          competencia: "",
+          fecha: "",
         };
   } catch (error) {
     console.error("Error al obtener el próximo partido:", error);
@@ -43,13 +44,14 @@ export const getNextMatch = async (): Promise<Match> => {
       versus: "",
       estadio: "",
       isAway: false,
-      id_escudoteca: "",
       id_prom: "",
       datetime: new Date().toString(),
       ficha_partido: "",
       ficha_rival: "",
       youtube: "",
       result: "",
+      competencia: "",
+      fecha: "",
     };
   }
 };
