@@ -1,4 +1,4 @@
-import { Calendar, Clock, Home, Plane } from "lucide-react";
+import { Calendar, Clock, Home, Plane, Ticket } from "lucide-react";
 import { formatMatchDateFull, getResultBgColor } from "@/lib/utils";
 import { Match } from "@/lib/types";
 
@@ -43,12 +43,18 @@ export function FixtureCard({ match }: { match: Match }) {
 
       <div className="font-medium flex flex-col gap-1">
         <div className="flex items-center gap-2 text-sm">
+          <Ticket className="w-4 h-4" aria-hidden="true" />
+          <span>
+            {match.competencia}, {match.fecha}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
           <Calendar className="w-4 h-4" aria-hidden="true" />
           <span>{formatted.date}</span>
         </div>
         <div className="flex items-center gap-2 text-sm">
           <Clock className="w-4 h-4" aria-hidden="true" />
-          <span>{formatted.time} H.</span>
+          <span>{formatted.time} hs.</span>
         </div>
         <div className="flex items-center gap-2 text-sm">
           {match.isAway ? (

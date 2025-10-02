@@ -1,6 +1,6 @@
 import { Match } from "@/lib/types";
 import { formatMatchDate } from "@/lib/utils";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, Ticket } from "lucide-react";
 
 export function NextMatch({ match }: { match: Match }) {
   const formattedDate = formatMatchDate(match.datetime);
@@ -24,7 +24,7 @@ export function NextMatch({ match }: { match: Match }) {
             </span>
           </div>
           <div className="flex items-center gap-1 font-semibold sm:text-xl">
-            <Calendar size={18} aria-hidden="true" />
+            <Ticket size={18} aria-hidden="true" />
             <span>{match.competencia}, </span>
             <span>{match.fecha}</span>
           </div>
