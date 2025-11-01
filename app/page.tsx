@@ -34,7 +34,7 @@ export default async function Home() {
   return (
     <>
       <Head>
-        <title>Hoy juega Morón? - Próximo partido y resultados</title>
+        <title>Hoy juega Morón? - Próximo partido y resultados.</title>
         <meta
           name="description"
           content="Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados y más sobre el Gallo."
