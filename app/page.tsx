@@ -31,6 +31,8 @@ export default async function Home() {
       }
     : null;
 
+  console.log(nextMatch);
+
   return (
     <>
       <Head>
