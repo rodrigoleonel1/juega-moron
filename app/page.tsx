@@ -57,11 +57,25 @@ export default async function Home() {
         <section>
           {nextMatch ? (
             <>
-              <NextMatch match={nextMatch} />
-              <CountdownDisplay
-                match_date={nextMatch.datetime}
-                match_sheet={nextMatch.ficha_partido}
-              />
+              {nextMatch.versus !== "" ? (
+                <>
+                  <NextMatch match={nextMatch} />
+                  <CountdownDisplay
+                    match_date={nextMatch.datetime}
+                    match_sheet={nextMatch.ficha_partido}
+                  />
+                </>
+              ) : (
+                <div className="text-center mt-2 py-8 bg-black/50 rounded-md shadow-md max-w-lg flex items-center">
+                  <img
+                    src="/moron.png"
+                    alt="Club Deportivo Morón"
+                  />
+                  <h2 className="text-2xl font-bold">
+                    Sin partidos a disputarse próximamente.
+                  </h2>
+                </div>
+              )}
             </>
           ) : (
             <div className="text-center mt-2 py-8 bg-black/50 rounded-md shadow-md max-w-lg">
