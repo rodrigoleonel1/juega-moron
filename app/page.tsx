@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { RecentMatches } from "@/components/recent-matches";
 import { NextMatch } from "@/components/next-match";
 import { getNextMatch } from "@/actions/getNextMatch";
@@ -33,19 +32,17 @@ export default async function Home() {
 
   return (
     <>
-      <Head>
-        <title>Hoy juega Morón? - Próximo partido y resultados.</title>
-        <meta
-          name="description"
-          content="Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados y más sobre el Gallo."
+      <title>Hoy juega Morón? - Próximo partido y resultados.</title>
+      <meta
+        name="description"
+        content="Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados y más sobre el Gallo."
+      />
+      {matchJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(matchJsonLd) }}
         />
-        {matchJsonLd && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(matchJsonLd) }}
-          />
-        )}
-      </Head>
+      )}
       <main className="lg:ml-10 space-y-6">
         <header>
           <h1 className="font-bold tracking-tighter text-6xl sm:text-8xl mt-6 max-w-xl">
