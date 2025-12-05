@@ -31,8 +31,6 @@ export default async function Home() {
       }
     : null;
 
-  console.log(nextMatch);
-
   return (
     <>
       <Head>
@@ -66,11 +64,8 @@ export default async function Home() {
                   />
                 </>
               ) : (
-                <div className="text-center mt-2 py-8 bg-black/50 rounded-md shadow-md max-w-lg flex items-center">
-                  <img
-                    src="/moron.png"
-                    alt="Club Deportivo Morón"
-                  />
+                <div className="text-center mt-2 py-8 bg-black/50 rounded-md shadow-md max-w-lg flex flex-col sm:flex-row items-center">
+                  <img src="/moron.png" alt="Club Deportivo Morón" />
                   <h2 className="text-2xl font-bold">
                     Sin partidos a disputarse próximamente.
                   </h2>
