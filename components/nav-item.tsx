@@ -20,20 +20,20 @@ export function NavItem({
   ref,
 }: NavItemProps) {
   return (
-    <div
-      ref={ref}
-      className={`px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
+    <Link
+      href={item.url}
+      className={` py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
         isActive ? "text-white" : "text-gray-300"
       }`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <Link
-        href={item.url}
-        className="text-sm flex items-center justify-center h-full font-semibold"
+      <div
+        ref={ref}
+        className="text-sm flex items-center justify-center h-full font-semibold px-2"
       >
         {item.name}
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }
