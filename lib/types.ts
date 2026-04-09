@@ -10,6 +10,7 @@ export interface Match {
   result?: string;
   competencia: string;
   fecha: string;
+  temporada?: "TEMP25" | "TEMP26";
 }
 
 export interface Player {

@@ -6,7 +6,6 @@ export default async function FixturePage() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold">Fixture temporada 2025</h1>
       <Matches matches={matches} />
     </>
   );

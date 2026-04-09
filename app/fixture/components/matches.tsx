@@ -10,12 +10,14 @@ interface MatchesProps {
 }
 
 export default function Matches({ matches }: MatchesProps) {
+  const [season, setSeason] = useState<"TEMP25" | "TEMP26">("TEMP26");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortOrder, setSortOrder] = useState("desc");
 
   const filteredAndSortedFixtures = matches
     .filter((match) => {
+      const matchesSeason = match.temporada === season;
       const matchDate = new Date(match.datetime);
       const now = new Date();
       const isPlayed = !!match.result;
@@ -40,7 +42,7 @@ export default function Matches({ matches }: MatchesProps) {
         matchesStatus = match.result?.includes("(E)") || false;
       }
 
-      return matchesSearch && matchesStatus;
+      return matchesSearch && matchesStatus && matchesSeason;
     })
     .sort((a, b) => {
       if (sortOrder === "asc") {
@@ -51,8 +53,11 @@ export default function Matches({ matches }: MatchesProps) {
     });
   return (
     <>
+      <h1 className="text-2xl font-semibold">
+        Fixture temporada {season === "TEMP26" ? "2026" : "2025"}
+      </h1>
       <form
-        className="flex flex-col md:flex-row gap-4 max-w-3xl"
+        className="flex flex-col lg:flex-row gap-4 max-w-4xl"
         onSubmit={(e) => e.preventDefault()}
       >
         <div className="relative flex-grow">
@@ -78,6 +83,15 @@ export default function Matches({ matches }: MatchesProps) {
           <option value="won">Ganados</option>
           <option value="lost">Perdidos</option>
           <option value="drawn">Empatados</option>
+        </select>
+        <select
+          value={season}
+          aria-label="Filtrar por temporada"
+          onChange={(e) => setSeason(e.target.value as "TEMP25" | "TEMP26")}
+          className="px-3 py-2 rounded-md border border-white bg-white text-black shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:border-black transition duration-100"
+        >
+          <option value="TEMP26">Temporada 2026</option>
+          <option value="TEMP25">Temporada 2025</option>
         </select>
         <button
           onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
