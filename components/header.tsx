@@ -6,8 +6,7 @@ import { NavItem } from "./nav-item";
 
 const navItems = [
   { name: "Inicio", url: "/" },
-  { name: "Clasificacion", url: "/clasificacion" },
-  { name: "Fixture", url: "/fixture" },
+  { name: "Fixture", url: "/fixture" }
 ];
 
 export function Header() {

@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
-import { Work_Sans, Inter, Roboto } from "next/font/google";
+import { Work_Sans } from "next/font/google";
 import { Header } from "@/components/header";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-
-const robotoHeading = Roboto({subsets:['latin'],variable:'--font-heading'});
-
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const workSans = Work_Sans({
   subsets: ["latin"],
@@ -78,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={cn("font-sans", inter.variable, robotoHeading.variable)}>
+    <html lang="es">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
