@@ -26,7 +26,6 @@ export function useCountdown(targetDate: Date): TimeLeft {
       const matchEnd = matchStart + 120 * 60 * 1000;
       const distance = matchStart - now;
 
-      // Verificar si el partido está en vivo (entre inicio y 100 minutos después)
       const isCurrentlyLive = now >= matchStart && now <= matchEnd;
 
       if (isCurrentlyLive) {
