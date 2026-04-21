@@ -21,6 +21,7 @@ export function NavItem({
 }: NavItemProps) {
   return (
     <Link
+      id={index.toString()}
       href={item.url}
       className={` py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
         isActive ? "text-white" : "text-gray-300"
