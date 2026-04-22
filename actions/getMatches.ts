@@ -49,12 +49,9 @@ export const getMatches = async (sheet?: SheetType): Promise<Match[]> => {
   try {
     // 🔹 Caso 1: una sola hoja
     if (sheet) {
-      const res = await fetch(
-        `${BASE_URL}?gid=${SHEETS[sheet]}&output=tsv`,
-        {
-          next: { tags: ["matches"] },
-        }
-      );
+      const res = await fetch(`${BASE_URL}?gid=${SHEETS[sheet]}&output=tsv`, {
+        next: { tags: ["matches"] },
+      });
 
       if (!res.ok) {
         throw new Error(`Failed to fetch ${sheet}`);
@@ -71,9 +68,9 @@ export const getMatches = async (sheet?: SheetType): Promise<Match[]> => {
     // 🔹 Caso 2: todas las hojas
     const results = await Promise.all(
       Object.entries(SHEETS).map(async ([sheet, gid]) => {
-        const res = await fetch(
-          `${BASE_URL}?gid=${gid}&output=tsv`
-        );
+        const res = await fetch(`${BASE_URL}?gid=${gid}&output=tsv`, {
+          next: { tags: ["matches"] },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to fetch sheet");
@@ -85,7 +82,7 @@ export const getMatches = async (sheet?: SheetType): Promise<Match[]> => {
           ...match,
           temporada: sheet as SheetType,
         }));
-      })
+      }),
     );
 
     // 🔥 Unificamos todo en un solo array
