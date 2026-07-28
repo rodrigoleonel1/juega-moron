@@ -75,8 +75,8 @@ export default async function Home() {
             <div className="flex flex-col sm:flex-row items-center gap-4 p-6 bg-surface backdrop-blur-sm border border-border rounded-2xl max-w-xl">
               <Image src="/moron.png" alt="Club Deportivo Morón" width={64} height={64} className="w-16 h-16" />
               <div className="text-center sm:text-left">
-                <h2 className="font-bold text-xl">Sin partidos próximos</h2>
-                <p className="text-muted text-sm">No hay partidos programados para disputarse próximamente.</p>
+                <h2 className="font-bold text-xl">Temporada finalizada</h2>
+                <p className="text-muted text-sm">Volvé pronto para enterarte del próximo partido del Gallo.</p>
               </div>
             </div>
           )

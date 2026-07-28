@@ -12,16 +12,3 @@ export interface Match {
   fecha: string;
   temporada?: "TEMP25" | "TEMP26";
 }
-
-export interface Player {
-  nombre: string;
-  posicion: string;
-  edad: string;
-  partidos: string;
-  goles: string;
-  asistencias: string;
-  goles_concedidos: string;
-  valla_invicta: string;
-  amarillas: string;
-  rojas: string;
-}

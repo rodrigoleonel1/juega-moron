@@ -42,6 +42,7 @@ export function NextMatch({ match }: { match: Match }) {
                 alt={match.versus}
                 width={64}
                 height={64}
+                priority
                 className="h-12 w-12 sm:h-16 sm:w-16"
               />
               <span className="text-xs font-semibold text-muted mt-1">{match.versus}</span>

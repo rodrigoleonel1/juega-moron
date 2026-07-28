@@ -27,16 +27,4 @@ export function formatMatchDateFull(datetime: string) {
   };
 }
 
-export function getResultTextColor(result: string) {
-  if (result.includes("(G)")) return "text-green-600";
-  if (result.includes("(P)")) return "text-red-600";
-  if (result.includes("(E)")) return "text-yellow-500";
-  return "text-blue-700";
-}
 
-export function getResultBgColor(result: string) {
-  if (result.includes("(G)")) return "bg-green-600";
-  if (result.includes("(P)")) return "bg-red-600";
-  if (result.includes("(E)")) return "bg-yellow-500 ";
-  return "bg-blue-100 text-blue-700";
-}

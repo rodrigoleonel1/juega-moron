@@ -81,7 +81,7 @@ export default function RootLayout({
           content="8WARsLdu7-U5Xn5naWCUDUFKgOMsEK3rl4eZGz5iskM"
         />
         <link rel="canonical" href={siteUrl} />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.webmanifest" />
       </head>
       <body className="font-sans antialiased">
         <div className="relative min-h-dvh">
