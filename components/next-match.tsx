@@ -1,18 +1,25 @@
+"use client";
+
+import Image from "next/image";
 import { Match } from "@/lib/types";
 import { formatMatchDate } from "@/lib/utils";
 import { Calendar, MapPin } from "lucide-react";
 
 export function NextMatch({ match }: { match: Match }) {
   const formattedDate = formatMatchDate(match.datetime);
+
   return (
     <section className="max-w-xl">
       <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden">
         <div className="bg-primary/5 px-4 py-3">
           <div className="grid grid-cols-3 items-center gap-3">
             <div className="flex flex-col items-center text-center">
-              <img
+              <Image
                 src="https://api.promiedos.com.ar/images/team/hbba/1"
                 alt="Deportivo Morón"
+                width={64}
+                height={64}
+                priority
                 className="h-12 w-12 sm:h-16 sm:w-16"
               />
               <span className="text-xs font-semibold text-muted mt-1">Morón</span>
@@ -30,9 +37,11 @@ export function NextMatch({ match }: { match: Match }) {
             </div>
 
             <div className="flex flex-col items-center text-center">
-              <img
+              <Image
                 src={`https://api.promiedos.com.ar/images/team/${match.id_prom}/1`}
                 alt={match.versus}
+                width={64}
+                height={64}
                 className="h-12 w-12 sm:h-16 sm:w-16"
               />
               <span className="text-xs font-semibold text-muted mt-1">{match.versus}</span>
@@ -72,6 +81,8 @@ export function NextMatch({ match }: { match: Match }) {
               Ficha rival
             </a>
           </div>
+
+
         </div>
       </div>
     </section>

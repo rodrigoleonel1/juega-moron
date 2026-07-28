@@ -7,9 +7,9 @@ export function RecentMatches({ recentMatches }: { recentMatches: Match[] }) {
       <h3 className="font-bold text-lg mb-3">Últimos 5 partidos</h3>
       <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden divide-y divide-border">
         {recentMatches.length > 0 ? (
-          recentMatches.map((match, index) => (
+          recentMatches.map((match) => (
             <div
-              key={index}
+              key={match.datetime}
               className="flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors"
             >
               <div className="flex items-center gap-2">

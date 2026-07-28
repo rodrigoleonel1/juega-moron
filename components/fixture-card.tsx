@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { formatMatchDateFull } from "@/lib/utils";
 import { Match } from "@/lib/types";
@@ -26,9 +27,11 @@ export function FixtureCard({ match }: { match: Match }) {
     <article className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden">
       <div className="grid grid-cols-3 items-center gap-2 p-4">
         <div className="flex flex-col items-center text-center gap-1">
-          <img
+          <Image
             src="https://api.promiedos.com.ar/images/team/hbba/1"
             alt="Deportivo Morón"
+            width={48}
+            height={48}
             className="h-10 w-10 sm:h-12 sm:w-12"
           />
           <span className="text-[10px] font-medium text-muted leading-tight">Morón</span>
@@ -47,9 +50,11 @@ export function FixtureCard({ match }: { match: Match }) {
         </div>
 
         <div className="flex flex-col items-center text-center gap-1">
-          <img
+          <Image
             src={`https://api.promiedos.com.ar/images/team/${match.id_prom}/1`}
             alt={match.versus}
+            width={48}
+            height={48}
             className="h-10 w-10 sm:h-12 sm:w-12"
           />
           <span className="text-[10px] font-medium text-muted leading-tight">{match.versus}</span>
