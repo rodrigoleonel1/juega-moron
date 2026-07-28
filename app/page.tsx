@@ -43,42 +43,45 @@ export default async function Home() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(matchJsonLd) }}
         />
       )}
-      <main className="lg:ml-10 space-y-6">
-        <header>
-          <h1 className="font-bold tracking-tighter text-6xl sm:text-8xl mt-6 max-w-xl">
-            Hoy juega Morón?
-          </h1>
+
+      <section className="animate-fade-in">
+        <header className="mb-6 max-w-xl">
+            <h1 className="font-bold text-8xl tracking-tight leading-none">
+              <span className="text-primary">Hoy</span>{" "}
+              <span>juega</span>{" "}
+              <span className="text-primary">Morón</span>
+              <span>?</span>
+            </h1>
         </header>
-        <section>
-          {nextMatch ? (
-            <>
-              {nextMatch.versus !== "" ? (
-                <>
-                  <NextMatch match={nextMatch} />
-                  <CountdownDisplay
-                    match_date={nextMatch.datetime}
-                    match_sheet={nextMatch.ficha_partido}
-                  />
-                </>
-              ) : (
-                <div className="text-center mt-2 py-8 bg-black/50 rounded-md shadow-md max-w-lg flex flex-col sm:flex-row items-center">
-                  <img src="/moron.png" alt="Club Deportivo Morón" />
-                  <h2 className="text-2xl font-bold">
-                    Sin partidos a disputarse próximamente.
-                  </h2>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center mt-2 py-8 bg-black/50 rounded-md shadow-md max-w-lg">
-              <h2 className="text-2xl font-bold">Cargando partido...</h2>
+
+        {nextMatch ? (
+          nextMatch.versus !== "" ? (
+            <div className="space-y-4">
+              <NextMatch match={nextMatch} />
+              <CountdownDisplay
+                match_date={nextMatch.datetime}
+              />
             </div>
-          )}
-        </section>
-        <section>
-          <RecentMatches recentMatches={recentMatches ?? []} />
-        </section>
-      </main>
+          ) : (
+            <div className="flex flex-col sm:flex-row items-center gap-4 p-6 bg-surface backdrop-blur-sm border border-border rounded-2xl max-w-xl">
+              <img src="/moron.png" alt="Club Deportivo Morón" className="w-16 h-16" />
+              <div className="text-center sm:text-left">
+                <h2 className="font-bold text-xl">Sin partidos próximos</h2>
+                <p className="text-muted text-sm">No hay partidos programados para disputarse próximamente.</p>
+              </div>
+            </div>
+          )
+        ) : (
+          <div className="flex items-center gap-3 p-6 bg-surface backdrop-blur-sm border border-border rounded-2xl max-w-xl">
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <p className="font-medium">Cargando partido...</p>
+          </div>
+        )}
+      </section>
+
+      <section className="mt-6 animate-fade-in" style={{ animationDelay: "0.15s" }}>
+        <RecentMatches recentMatches={recentMatches ?? []} />
+      </section>
     </>
   );
 }

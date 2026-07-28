@@ -1,101 +1,105 @@
-import { Calendar, Clock, Home, Plane, Ticket } from "lucide-react";
-import { formatMatchDateFull, getResultBgColor } from "@/lib/utils";
+import { ExternalLink } from "lucide-react";
+import { formatMatchDateFull } from "@/lib/utils";
 import { Match } from "@/lib/types";
 
 export function FixtureCard({ match }: { match: Match }) {
   const formatted = formatMatchDateFull(match.datetime);
 
-  return (
-    <article className="bg-black/60 p-4 rounded-md shadow-md space-y-4">
-      {match.result ? (
-        <header
-          className={`text-lg rounded-md font-semibold py-1 flex gap-2 justify-center items-center ${getResultBgColor(
-            match.result
-          )} `}
-        >
-          <img
-            src="https://api.promiedos.com.ar/images/team/hbba/1"
-            alt="Deportivo Morón"
-            className="h-8 w-8"
-          />
-          <span>{match.result.split(" ")[0]}</span>
-          <img
-            src={`https://api.promiedos.com.ar/images/team/${match.id_prom}/1`}
-            alt={match.versus}
-            className="h-8"
-          />
-        </header>
-      ) : (
-        <header className="bg-blue-100 text-blue-700 text-lg rounded-md font-semibold py-1 flex gap-2 justify-center items-center">
-          <img
-            src="https://api.promiedos.com.ar/images/team/hbba/1"
-            alt="Deportivo Morón"
-            className="h-8 w-8"
-          />
-          <span>vs.</span>
-          <img
-            src={`https://api.promiedos.com.ar/images/team/${match.id_prom}/1`}
-            alt={match.versus}
-            className="h-8 w-8"
-          />
-        </header>
-      )}
+  const resultType = match.result?.includes("(G)")
+    ? "win"
+    : match.result?.includes("(P)")
+    ? "loss"
+    : match.result?.includes("(E)")
+    ? "draw"
+    : null;
 
-      <div className="font-medium flex flex-col gap-1">
-        <div className="flex items-center gap-2 text-sm">
-          <Ticket className="w-4 h-4" aria-hidden="true" />
-          <span>
-            {match.competencia}, {match.fecha}
-          </span>
+  const resultColor =
+    resultType === "win"
+      ? "text-success"
+      : resultType === "loss"
+      ? "text-error"
+      : resultType === "draw"
+      ? "text-warning"
+      : "text-primary";
+
+  return (
+    <article className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden">
+      <div className="grid grid-cols-3 items-center gap-2 p-4">
+        <div className="flex flex-col items-center text-center gap-1">
+          <img
+            src="https://api.promiedos.com.ar/images/team/hbba/1"
+            alt="Deportivo Morón"
+            className="h-10 w-10 sm:h-12 sm:w-12"
+          />
+          <span className="text-[10px] font-medium text-muted leading-tight">Morón</span>
         </div>
-        <div className="flex items-center gap-2 text-sm">
-          <Calendar className="w-4 h-4" aria-hidden="true" />
-          <span>{formatted.date}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm">
-          <Clock className="w-4 h-4" aria-hidden="true" />
-          <span>{formatted.time} hs.</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm">
-          {match.isAway ? (
-            <Plane className="w-4 h-4" aria-hidden="true" />
+
+        <div className="text-center">
+          {match.result ? (
+            <span className={`font-bold text-lg sm:text-xl ${resultColor}`}>
+              {match.result.split(" ")[0]}
+            </span>
           ) : (
-            <Home className="w-4 h-4" aria-hidden="true" />
+            <span className="inline-block px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-bold">
+              VS
+            </span>
           )}
-          <span>{match.isAway ? "Visitante" : "Local"}</span>
+        </div>
+
+        <div className="flex flex-col items-center text-center gap-1">
+          <img
+            src={`https://api.promiedos.com.ar/images/team/${match.id_prom}/1`}
+            alt={match.versus}
+            className="h-10 w-10 sm:h-12 sm:w-12"
+          />
+          <span className="text-[10px] font-medium text-muted leading-tight">{match.versus}</span>
         </div>
       </div>
 
-      {match.result ? (
-        <footer className="grid gap-2 grid-cols-2">
-          {match.youtube && (
-            <a
-              href={match.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Ver resumen del partido contra ${match.versus}`}
-              className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
-            >
-              Resumen
-            </a>
-          )}
-          {match.ficha_partido && (
-            <a
-              href={match.ficha_partido}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Ver ficha del partido contra ${match.versus}`}
-              className="w-full text-center rounded-md bg-white text-black hover:bg-white/80 p-1 font-semibold"
-            >
-              Ficha
-            </a>
-          )}
-        </footer>
-      ) : (
-        <footer className="bg-blue-100 text-blue-700 rounded-md font-semibold p-1 text-center">
-          Próximamente
-        </footer>
-      )}
+      <div className="px-4 pb-4 space-y-1.5">
+        <div className="flex items-center justify-center gap-1 text-[11px] text-muted">
+          <span className="bg-primary/5 px-1.5 py-0.5 rounded">{match.competencia}</span>
+          <span>·</span>
+          <span>{match.fecha}</span>
+        </div>
+        <p className="text-[11px] text-muted text-center">
+          {formatted.date} — {formatted.time} hs.
+        </p>
+      </div>
+
+      <div className="px-4 pb-4">
+        {match.result ? (
+          <div className="flex gap-1.5">
+            {match.youtube && (
+              <a
+                href={match.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Ver resumen del partido contra ${match.versus}`}
+                className="flex-1 text-center rounded-lg bg-primary text-white hover:bg-primary-hover py-1.5 text-xs font-semibold transition-colors inline-flex items-center justify-center gap-1"
+              >
+                Resumen
+                <ExternalLink size={10} aria-hidden="true" />
+              </a>
+            )}
+            {match.ficha_partido && (
+              <a
+                href={match.ficha_partido}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 text-center rounded-lg bg-black/20 backdrop-blur-sm border border-border text-foreground hover:bg-surface-hover py-1.5 text-xs font-semibold transition-colors inline-flex items-center justify-center gap-1"
+              >
+                Ficha
+                <ExternalLink size={10} aria-hidden="true" />
+              </a>
+            )}
+          </div>
+        ) : (
+          <div className="rounded-lg bg-primary/10 text-primary py-1.5 text-xs font-semibold text-center border border-primary/20">
+            Próximamente
+          </div>
+        )}
+      </div>
     </article>
   );
 }

@@ -1,90 +1,53 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { NavItem } from "./nav-item";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const navItems = [
   { name: "Inicio", url: "/" },
-  { name: "Fixture", url: "/fixture" }
+  { name: "Fixture", url: "/fixture" },
 ];
 
 export function Header() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hoverStyle, setHoverStyle] = useState({});
-  const [activeStyle, setActiveStyle] = useState({ left: "0px", width: "0px" });
-  const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
   const pathname = usePathname();
-
-  const activeIndex = navItems.findIndex((item) => item.url === pathname);
-  const currentActiveIndex = activeIndex >= 0 ? activeIndex : 0;
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    if (hoveredIndex !== null) {
-      const hoveredElement = tabRefs.current[hoveredIndex];
-      if (hoveredElement) {
-        const { offsetLeft, offsetWidth } = hoveredElement;
-        setHoverStyle({
-          left: `${offsetLeft}px`,
-          width: `${offsetWidth}px`,
-        });
-      }
-    }
-  }, [hoveredIndex]);
-
-  useEffect(() => {
-    const activeElement = tabRefs.current[currentActiveIndex];
-    if (activeElement) {
-      const { offsetLeft, offsetWidth } = activeElement;
-      setActiveStyle({
-        left: `${offsetLeft}px`,
-        width: `${offsetWidth}px`,
-      });
-    }
-  }, [currentActiveIndex]);
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      const activeElement = tabRefs.current[currentActiveIndex];
-      if (activeElement) {
-        const { offsetLeft, offsetWidth } = activeElement;
-        setActiveStyle({
-          left: `${offsetLeft}px`,
-          width: `${offsetWidth}px`,
-        });
-      }
-    });
-  }, [currentActiveIndex]);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="w-full h-12 flex items-center justify-center pt-8">
-      <nav className="relative">
-        <div
-          className="absolute h-[30px] transition-all duration-300 ease-out bg-black/70 rounded-md"
-          style={{
-            ...hoverStyle,
-            opacity: hoveredIndex !== null ? 1 : 0,
-          }}
-        />
-        <div
-          className="absolute -bottom-1 h-[2px] bg-white transition-all duration-300 ease-out"
-          style={activeStyle}
-        />
-        <div className="relative flex space-x-4">
-          {navItems.map((item, index) => (
-            <NavItem
-              key={index}
-              item={item}
-              index={index}
-              isActive={index === currentActiveIndex}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              ref={(el) => {
-                tabRefs.current[index] = el;
-              }}
-            />
-          ))}
-        </div>
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
+      <nav
+        className={`mt-3 flex items-center gap-1 px-2 py-1.5 rounded-full transition-all duration-300 pointer-events-auto ${
+          scrolled
+            ? "bg-black/70 backdrop-blur-md shadow-lg"
+            : "bg-transparent"
+        }`}
+        aria-label="Navegación principal"
+      >
+        {navItems.map((item) => {
+          const isActive = pathname === item.url;
+          return (
+            <Link
+              key={item.url}
+              href={item.url}
+              className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${
+                isActive
+                  ? "text-white bg-primary/10 backdrop-blur-sm"
+                  : scrolled
+                  ? "text-white/70 hover:text-white"
+                  : "text-white/70 hover:text-white"
+              }`}
+              aria-current={isActive ? "page" : undefined}
+            >
+              {item.name}
+            </Link>
+          );
+        })}
       </nav>
     </header>
   );

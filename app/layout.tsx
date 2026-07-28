@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Work_Sans } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { Header } from "@/components/header";
 import "./globals.css";
 
-const workSans = Work_Sans({
+const outfit = Outfit({
   subsets: ["latin"],
+  variable: "--font-outfit",
 });
 
 const siteUrl = "https://juegamoron.vercel.app/";
@@ -32,7 +33,6 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Rodrigo Alarcón" }],
   creator: "Rodrigo Alarcón",
-
   openGraph: {
     title: "Hoy juega Morón? - Próximo partido y resultados",
     description:
@@ -73,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" className={outfit.variable}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
@@ -83,17 +83,18 @@ export default function RootLayout({
         <link rel="canonical" href={siteUrl} />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${workSans.className} antialiased`}>
-        <main className="relative min-h-screen">
+      <body className="font-sans antialiased">
+        <div className="relative min-h-dvh">
           <div
-            className="absolute inset-0 bg-[url(/bg.jpg)] bg-center bg-cover opacity-70 z-0 bg-fixed"
+            className="fixed inset-0 bg-[url(/bg.jpg)] bg-center bg-cover opacity-60 z-0"
             aria-hidden="true"
           />
+          <div className="fixed inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 z-[1]" aria-hidden="true" />
           <Header />
-          <section className="relative z-10 h-full p-8 flex flex-col gap-8  mr-auto">
+          <main className="relative z-10 px-4 sm:px-6 lg:px-8 pt-16">
             {children}
-          </section>
-        </main>
+          </main>
+        </div>
       </body>
     </html>
   );

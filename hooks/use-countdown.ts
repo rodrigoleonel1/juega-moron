@@ -7,7 +7,6 @@ interface TimeLeft {
   hours: number;
   minutes: number;
   seconds: number;
-  isLive: boolean;
 }
 
 export function useCountdown(targetDate: Date): TimeLeft {
@@ -16,27 +15,15 @@ export function useCountdown(targetDate: Date): TimeLeft {
     hours: 0,
     minutes: 0,
     seconds: 0,
-    isLive: false,
   });
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const matchStart = targetDate.getTime();
-      const matchEnd = matchStart + 120 * 60 * 1000;
       const distance = matchStart - now;
 
-      const isCurrentlyLive = now >= matchStart && now <= matchEnd;
-
-      if (isCurrentlyLive) {
-        setTimeLeft({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-          isLive: true,
-        });
-      } else if (distance > 0) {
+      if (distance > 0) {
         setTimeLeft({
           days: Math.floor(distance / (1000 * 60 * 60 * 24)),
           hours: Math.floor(
@@ -44,7 +31,6 @@ export function useCountdown(targetDate: Date): TimeLeft {
           ),
           minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((distance % (1000 * 60)) / 1000),
-          isLive: false,
         });
       } else {
         setTimeLeft({
@@ -52,7 +38,6 @@ export function useCountdown(targetDate: Date): TimeLeft {
           hours: 0,
           minutes: 0,
           seconds: 0,
-          isLive: false,
         });
       }
     }, 1000);

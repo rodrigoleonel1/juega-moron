@@ -22,13 +22,9 @@ export default function Matches({ matches }: MatchesProps) {
       const now = new Date();
       const isPlayed = !!match.result;
       const isUpcoming = !isPlayed && matchDate > now;
-
-      // Filter by search term
       const matchesSearch = match.versus
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-
-      // Filter by status
       let matchesStatus = true;
       if (filterStatus === "played") {
         matchesStatus = isPlayed;
@@ -41,7 +37,6 @@ export default function Matches({ matches }: MatchesProps) {
       } else if (filterStatus === "drawn") {
         matchesStatus = match.result?.includes("(E)") || false;
       }
-
       return matchesSearch && matchesStatus && matchesSeason;
     })
     .sort((a, b) => {
@@ -51,76 +46,99 @@ export default function Matches({ matches }: MatchesProps) {
         return new Date(b.datetime).getTime() - new Date(a.datetime).getTime();
       }
     });
+
   return (
-    <>
-      <h1 className="text-2xl font-semibold">
-        Fixture temporada {season === "TEMP26" ? "2026" : "2025"}
-      </h1>
+    <section className="animate-fade-in mx-auto max-w-7xl">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+        <h1 className="font-bold text-2xl sm:text-3xl tracking-tight">
+          Fixture{" "}
+          <span className="text-primary">
+            {season === "TEMP26" ? "2026" : "2025"}
+          </span>
+        </h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setSeason("TEMP26")}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+              season === "TEMP26"
+                ? "bg-primary text-white"
+                : "bg-surface backdrop-blur-sm border border-border text-muted hover:text-foreground"
+            }`}
+          >
+            2026
+          </button>
+          <button
+            onClick={() => setSeason("TEMP25")}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+              season === "TEMP25"
+                ? "bg-primary text-white"
+                : "bg-surface backdrop-blur-sm border border-border text-muted hover:text-foreground"
+            }`}
+          >
+            2025
+          </button>
+        </div>
+      </div>
+
       <form
-        className="flex flex-col lg:flex-row gap-4 max-w-4xl"
+        className="flex flex-col lg:flex-row gap-3 mb-8"
         onSubmit={(e) => e.preventDefault()}
       >
         <div className="relative flex-grow">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
           <input
             type="text"
             placeholder="Buscar por rival..."
             aria-label="Buscar por rival"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 w-full rounded-md border-2 border-white bg-white text-black placeholder-slate-400 shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:border-black transition duration-100"
+            className="pl-9 pr-4 py-2.5 w-full rounded-lg bg-surface backdrop-blur-sm border border-border text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
           />
         </div>
-        <select
-          value={filterStatus}
-          aria-label="Filtrar por estado del partido"
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 rounded-md border border-white bg-white text-black shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:border-black transition duration-100"
-        >
-          <option value="all">Todos</option>
-          <option value="upcoming">Próximos</option>
-          <option value="played">Jugados</option>
-          <option value="won">Ganados</option>
-          <option value="lost">Perdidos</option>
-          <option value="drawn">Empatados</option>
-        </select>
-        <select
-          value={season}
-          aria-label="Filtrar por temporada"
-          onChange={(e) => setSeason(e.target.value as "TEMP25" | "TEMP26")}
-          className="px-3 py-2 rounded-md border border-white bg-white text-black shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:border-black transition duration-100"
-        >
-          <option value="TEMP26">Temporada 2026</option>
-          <option value="TEMP25">Temporada 2025</option>
-        </select>
-        <button
-          onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-          className="py-2 px-3 rounded-md bg-white text-black  shadow-md flex justify-center items-center"
-        >
-          Ordenar por fecha
-          {sortOrder === "asc" ? (
-            <ArrowUp size={20} />
-          ) : (
-            <ArrowDown size={20} />
-          )}
-        </button>
+        <div className="flex gap-3 flex-wrap">
+          <select
+            value={filterStatus}
+            aria-label="Filtrar por estado del partido"
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-3 py-2.5 rounded-lg bg-surface backdrop-blur-sm border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+          >
+            <option value="all">Todos</option>
+            <option value="upcoming">Próximos</option>
+            <option value="played">Jugados</option>
+            <option value="won">Ganados</option>
+            <option value="lost">Perdidos</option>
+            <option value="drawn">Empatados</option>
+          </select>
+          <button
+            type="button"
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+            className="px-3 py-2.5 rounded-lg bg-surface backdrop-blur-sm border border-border text-foreground hover:bg-surface-hover transition-colors flex items-center gap-2 text-sm font-medium"
+            aria-label={`Ordenar por fecha ${sortOrder === "asc" ? "descendente" : "ascendente"}`}
+          >
+            Fecha
+            {sortOrder === "asc" ? (
+              <ArrowUp size={14} aria-hidden="true" />
+            ) : (
+              <ArrowDown size={14} aria-hidden="true" />
+            )}
+          </button>
+        </div>
       </form>
 
       {filteredAndSortedFixtures.length > 0 ? (
-        <ul className="grid list-none p-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-          {filteredAndSortedFixtures.map((match: Match) => {
-            return (
-              <li key={match.datetime}>
-                <FixtureCard match={match} />
-              </li>
-            );
-          })}
+        <ul className="grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+          {filteredAndSortedFixtures.map((match: Match) => (
+            <li key={match.datetime}>
+              <FixtureCard match={match} />
+            </li>
+          ))}
         </ul>
       ) : (
-        <div className="text-center w-full py-8 text-xl font-semibold bg-black/60 rounded-md">
-          <p>No se encontraron partidos con los filtros aplicados.</p>
+        <div className="text-center py-12 px-6 bg-surface backdrop-blur-sm border border-border rounded-2xl">
+          <p className="font-bold text-lg text-muted">No se encontraron partidos</p>
+          <p className="text-muted text-sm mt-1">Probá con otros filtros o cambiá de temporada.</p>
         </div>
       )}
-    </>
+    </section>
   );
 }

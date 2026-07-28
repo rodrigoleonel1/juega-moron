@@ -1,22 +1,15 @@
 "use client";
 
-import MatchScoreboard from "./match-scoreboard";
 import { useCountdown } from "@/hooks/use-countdown";
 
 interface CountdownDisplayProps {
   match_date: string;
-  match_sheet: string;
 }
 
 export function CountdownDisplay({
   match_date,
-  match_sheet,
 }: CountdownDisplayProps) {
   const countdown = useCountdown(new Date(match_date));
-
-  if (countdown.isLive) {
-    return <MatchScoreboard match_sheet={match_sheet} />;
-  }
 
   const countdownItems = [
     { value: countdown.days.toString().padStart(2, "0"), label: "Días" },
@@ -26,15 +19,31 @@ export function CountdownDisplay({
   ];
 
   return (
-    <section className="grid grid-cols-4 max-w-lg mt-6">
-      {countdownItems.map((item, index) => (
-        <article key={index} className="text-center">
-          <p className="text-5xl sm:text-6xl font-bold tabular-nums">
-            {item.value}
-          </p>
-          <p className="text-sm">{item.label}</p>
-        </article>
-      ))}
+    <section className="max-w-xl">
+      <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl p-4">
+        <p className="text-muted text-sm font-medium mb-4 text-center">
+          Próximo partido en
+        </p>
+        <div className="grid grid-cols-4 gap-2 sm:gap-4">
+          {countdownItems.map((item, index) => (
+            <div key={index} className="text-center overflow-hidden">
+              <p className="font-bold text-5xl tabular-nums text-primary leading-none">
+                {item.value.split("").map((char, i) => (
+                  <span
+                    key={char + "-" + i}
+                    className="animate-slide-up inline-block"
+                  >
+                    {char}
+                  </span>
+                ))}
+              </p>
+              <p className="text-xs text-muted font-medium mt-1.5">
+                {item.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
