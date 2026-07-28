@@ -46,11 +46,8 @@ export default async function Home() {
 
       <section className="animate-fade-in">
         <header className="mb-6 max-w-xl">
-            <h1 className="font-bold text-8xl tracking-tight leading-none">
-              <span className="text-primary">Hoy</span>{" "}
-              <span>juega</span>{" "}
-              <span className="text-primary">Morón</span>
-              <span>?</span>
+            <h1 className="font-bold text-8xl tracking-tight leading-none text-white">
+              Hoy juega Morón?
             </h1>
         </header>
 
