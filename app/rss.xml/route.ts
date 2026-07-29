@@ -1,7 +1,7 @@
 import { getMatches } from "@/actions/getMatches";
 
 export async function GET() {
-  const baseUrl = "https://juegamoron.com";
+  const baseUrl = "https://juegamoron.vercel.app";
 
   try {
     const matches = await getMatches();

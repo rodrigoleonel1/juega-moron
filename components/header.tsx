@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 const navItems = [
   { name: "Inicio", url: "/" },
   { name: "Fixture", url: "/fixture" },
+  { name: "Juegos", url: "/juegos" },
 ];
 
 export function Header() {

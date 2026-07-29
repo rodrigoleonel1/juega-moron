@@ -1,3 +1,14 @@
+export interface Club {
+  nombre: string;
+  img_escudo?: string;
+}
+
+export interface Jugador {
+  nombre: string;
+  apellido: string;
+  clubes?: Club[];
+}
+
 export interface Match {
   versus: string;
   estadio: string;

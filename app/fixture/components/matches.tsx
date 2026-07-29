@@ -50,7 +50,7 @@ export default function Matches({ matches }: MatchesProps) {
   return (
     <section className="animate-fade-in mx-auto max-w-7xl">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-        <h1 className="font-bold text-2xl sm:text-3xl tracking-tight">
+        <h1 className="font-bold text-3xl sm:text-4xl tracking-tight">
           Fixture{" "}
           <span className="text-primary">
             {season === "TEMP26" ? "2026" : "2025"}

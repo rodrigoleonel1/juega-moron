@@ -46,49 +46,44 @@ const parseTSV = (data: string): Match[] => {
 };
 
 export const getMatches = async (sheet?: SheetType): Promise<Match[]> => {
-  try {
-    // 🔹 Caso 1: una sola hoja
-    if (sheet) {
-      const res = await fetch(`${BASE_URL}?gid=${SHEETS[sheet]}&output=tsv`, {
-        next: { tags: ["matches"] },
+  // 🔹 Caso 1: una sola hoja
+  if (sheet) {
+    const res = await fetch(`${BASE_URL}?gid=${SHEETS[sheet]}&output=tsv`, {
+      next: { tags: ["matches", `season-${sheet}`] },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch ${sheet}`);
+    }
+
+    const text = await res.text();
+
+    return parseTSV(text).map((match) => ({
+      ...match,
+      temporada: sheet,
+    }));
+  }
+
+  // 🔹 Caso 2: todas las hojas
+  const results = await Promise.all(
+    Object.entries(SHEETS).map(async ([sheet, gid]) => {
+      const res = await fetch(`${BASE_URL}?gid=${gid}&output=tsv`, {
+        next: { tags: ["matches", `season-${sheet}`] },
       });
 
       if (!res.ok) {
-        throw new Error(`Failed to fetch ${sheet}`);
+        throw new Error("Failed to fetch sheet");
       }
 
       const text = await res.text();
 
       return parseTSV(text).map((match) => ({
         ...match,
-        temporada: sheet,
+        temporada: sheet as SheetType,
       }));
-    }
+    }),
+  );
 
-    // 🔹 Caso 2: todas las hojas
-    const results = await Promise.all(
-      Object.entries(SHEETS).map(async ([sheet, gid]) => {
-        const res = await fetch(`${BASE_URL}?gid=${gid}&output=tsv`, {
-          next: { tags: ["matches"] },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch sheet");
-        }
-
-        const text = await res.text();
-
-        return parseTSV(text).map((match) => ({
-          ...match,
-          temporada: sheet as SheetType,
-        }));
-      }),
-    );
-
-    // 🔥 Unificamos todo en un solo array
-    return results.flat();
-  } catch (error) {
-    console.error("Error fetching matches:", error);
-    return [];
-  }
+  // 🔥 Unificamos todo en un solo array
+  return results.flat();
 };

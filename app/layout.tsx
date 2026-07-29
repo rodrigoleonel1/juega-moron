@@ -91,7 +91,7 @@ export default function RootLayout({
           />
           <div className="fixed inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 z-[1]" aria-hidden="true" />
           <Header />
-          <main className="relative z-10 px-4 sm:px-6 lg:px-8 pt-16">
+          <main className="relative z-10 px-4 sm:px-6 lg:px-8 pt-20">
             {children}
           </main>
         </div>

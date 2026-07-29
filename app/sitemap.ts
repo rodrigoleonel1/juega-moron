@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getMatches } from "@/actions/getMatches";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://juegamoron.com";
+  const baseUrl = "https://juegamoron.vercel.app";
 
   const staticPages: MetadataRoute.Sitemap = [
     {
