@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: "Adiviná el apellido del jugador de Deportivo Morón.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function WordlePage() {
   const target = getDailyWord();
   const jugador = getJugador(target);
