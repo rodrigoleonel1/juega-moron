@@ -20,5 +20,5 @@ export default function WordlePage() {
       </h1>
       <WordleGame target={target} jugador={jugador ?? undefined} />
     </section>
-  );
+  )
 }
