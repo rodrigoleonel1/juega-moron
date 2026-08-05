@@ -1,7 +1,10 @@
 import { Match } from "@/lib/types";
 
-const BASE_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6fCbDDYrrzkc0z-w5J12AZ4pcA6HUAoSb-9AF4ETycvpCQozKe0DuQrvdr6BZcsqNrB1iuu6FOT_a/pub";
+const BASE_URL = process.env.SHEETS_BASE_URL;
+
+if (!BASE_URL) {
+  throw new Error("Falta SHEETS_BASE_URL en el entorno");
+}
 
 type SheetType = "TEMP25" | "TEMP26";
 

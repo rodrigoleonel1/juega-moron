@@ -1,8 +1,9 @@
 import { getMatches } from "@/actions/getMatches";
 import { ARGENTINA_TIME_ZONE, parseArgentinaDateTime } from "@/lib/argentina-date";
+import { SITE_URL } from "@/lib/constants";
 
 export async function GET() {
-  const baseUrl = "https://juegamoron.vercel.app";
+  const baseUrl = SITE_URL;
 
   try {
     const matches = await getMatches();

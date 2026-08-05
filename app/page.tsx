@@ -4,6 +4,7 @@ import { NextMatchSection } from "@/components/next-match-section";
 import { MatchSchema } from "@/components/match-schema";
 import { getNextMatch } from "@/actions/getNextMatch";
 import { getRecentMatches } from "@/actions/getRecentMatches";
+import { SITE_URL } from "@/lib/constants";
 
 const RECENT_MATCHES_TO_SHOW = 5;
 
@@ -19,11 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "Hoy juega Morón?",
       description,
-      url: "https://juegamoron.vercel.app",
+      url: SITE_URL,
       siteName: "Juega Morón",
       images: [
         {
-          url: "https://juegamoron.vercel.app/og-image.jpg",
+          url: `${SITE_URL}/og-image.jpg`,
           width: 1200,
           height: 630,
           alt: "Hoy juega Morón?",

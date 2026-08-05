@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   parseArgentinaDateTime,
   getArgentinaDateKey,
-} from "./argentina-date";
+} from "@/lib/argentina-date";
 
 describe("parseArgentinaDateTime", () => {
   it("interpreta hora local argentina como UTC-3", () => {

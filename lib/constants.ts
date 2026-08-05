@@ -2,6 +2,9 @@ import { Jugador, Match } from "./types";
 
 export const MORON_TEAM_ID = "hbba";
 
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://juegamoron.vercel.app";
+
 export const EMPTY_MATCH: Match = {
   versus: "",
   estadio: "",

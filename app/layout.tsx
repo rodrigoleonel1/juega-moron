@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed } from "next/font/google";
 import { Header } from "@/components/header";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
 const barlow = Barlow({
@@ -15,7 +17,7 @@ const barlowCondensed = Barlow_Condensed({
   variable: "--font-barlow-condensed",
 });
 
-const siteUrl = "https://juegamoron.vercel.app/";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
     template: `%s | Hoy juega Morón?`,
   },
   description:
-    "Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados, fixture, tabla de posiciones y más sobre el Gallo de Morón.",
+    "Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados y fixture del Gallo de Morón.",
   keywords: [
     "Deportivo Morón",
     "Morón",
@@ -36,7 +38,6 @@ export const metadata: Metadata = {
     "resultados",
     "primera nacional",
     "ascenso",
-    "tabla de posiciones",
   ],
   authors: [{ name: "Rodrigo Alarcón" }],
   creator: "Rodrigo Alarcón",
@@ -89,8 +90,12 @@ export default function RootLayout({
         />
         <link rel="canonical" href={siteUrl} />
         <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="apple-touch-icon" href="/icon-180.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className="font-sans antialiased">
+        <ServiceWorkerRegister />
         <div className="relative min-h-dvh">
           <div
             className="fixed inset-0 bg-[url(/bg.jpg)] bg-center bg-cover opacity-60 z-0"

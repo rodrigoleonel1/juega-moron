@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { isValidWord, getDailyIndex } from "./wordle";
-import { EMPTY_STATS, recordResult, winPercentage } from "./wordle-stats";
+import { isValidWord, getDailyIndex } from "@/lib/wordle";
+import { EMPTY_STATS, recordResult, winPercentage } from "@/lib/wordle-stats";
 
 describe("isValidWord", () => {
   it("acepta un apellido existente sin importar mayúsculas", () => {
