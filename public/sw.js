@@ -1,4 +1,4 @@
-const VERSION = "v1";
+const VERSION = "v2";
 const CACHE_NAME = `juega-moron-${VERSION}`;
 const APP_SHELL = [
   "/",
@@ -7,8 +7,10 @@ const APP_SHELL = [
   "/manifest.webmanifest",
   "/bg.jpg",
   "/moron.png",
-  "/icon-192.png",
-  "/icon-512.png",
+  "/favicon.ico",
+  "/android-chrome-192x192.png",
+  "/android-chrome-512x512.png",
+  "/apple-touch-icon.png",
 ];
 
 self.addEventListener("install", (event) => {
