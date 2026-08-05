@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
-import { getMatches } from "@/actions/getMatches";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://juegamoron.vercel.app";
 
-  const staticPages: MetadataRoute.Sitemap = [
+  return [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -17,18 +16,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/juegos`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
   ];
-
-  try {
-    const matches = await getMatches();
-    const matchPages: MetadataRoute.Sitemap = matches.map((match) => ({
-      url: `${baseUrl}/fixture`,
-      lastModified: new Date(match.datetime),
-      changeFrequency: "monthly" as const,
-      priority: 0.5,
-    }));
-    return [...staticPages, ...matchPages];
-  } catch {
-    return staticPages;
-  }
 }

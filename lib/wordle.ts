@@ -1,5 +1,6 @@
 import { Jugador } from "./types";
 import { JUGADORES } from "./constants";
+import { getArgentinaDate } from "./argentina-date";
 
 export { JUGADORES };
 
@@ -12,14 +13,16 @@ const LENGTH_COUNT = JUGADORES.reduce<Record<number, number>>((acc, j) => {
 
 const VALID_APELLIDOS = APELLIDOS.filter((a) => (LENGTH_COUNT[a.length] ?? 0) >= 6);
 
-export function getDailyWord(): string {
+export function getDailyIndex(): number {
   const start = new Date("2026-01-01");
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const diff = Math.floor(
+  const today = getArgentinaDate();
+  return Math.floor(
     (today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
   );
-  return VALID_APELLIDOS[diff % VALID_APELLIDOS.length];
+}
+
+export function getDailyWord(): string {
+  return VALID_APELLIDOS[getDailyIndex() % VALID_APELLIDOS.length];
 }
 
 export function getJugador(apellido: string): Jugador | undefined {

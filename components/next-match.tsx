@@ -3,19 +3,20 @@
 import Image from "next/image";
 import { Match } from "@/lib/types";
 import { formatMatchDate } from "@/lib/utils";
+import { MORON_TEAM_ID } from "@/lib/constants";
 import { Calendar, MapPin } from "lucide-react";
 
 export function NextMatch({ match }: { match: Match }) {
   const formattedDate = formatMatchDate(match.datetime);
 
   return (
-    <section className="max-w-xl">
+    <section className="max-w-xl" aria-label={`Próximo partido contra ${match.versus}`}>
       <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden">
         <div className="bg-primary/5 px-4 py-3">
           <div className="grid grid-cols-3 items-center gap-3">
             <div className="flex flex-col items-center text-center">
               <Image
-                src="https://api.promiedos.com.ar/images/team/hbba/1"
+                src={`https://api.promiedos.com.ar/images/team/${MORON_TEAM_ID}/1`}
                 alt="Deportivo Morón"
                 width={64}
                 height={64}
@@ -26,11 +27,11 @@ export function NextMatch({ match }: { match: Match }) {
             </div>
 
             <div className="text-center">
-              <span className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-lg text-sm font-bold">
+              <span className="inline-block px-3 py-1 bg-primary/10 text-primary-light rounded-lg text-sm font-bold">
                 VS
               </span>
               <div className="mt-1.5">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/5 text-primary rounded text-xs font-medium border border-primary/20">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/5 text-primary-light rounded text-xs font-medium border border-primary/20">
                   {match.competencia}
                 </span>
               </div>
@@ -42,7 +43,7 @@ export function NextMatch({ match }: { match: Match }) {
                 alt={match.versus}
                 width={64}
                 height={64}
-                priority
+                loading="lazy"
                 className="h-12 w-12 sm:h-16 sm:w-16"
               />
               <span className="text-xs font-semibold text-muted mt-1">{match.versus}</span>
@@ -67,7 +68,7 @@ export function NextMatch({ match }: { match: Match }) {
               href={match.ficha_partido}
               rel="noopener noreferrer"
               target="_blank"
-              className="text-sm font-medium text-muted underline underline-offset-2 decoration-foreground/30 hover:text-primary hover:decoration-primary transition-colors"
+              className="text-sm font-medium text-muted underline underline-offset-2 decoration-foreground/30 hover:text-primary-light hover:decoration-primary transition-colors"
               aria-label={`Ver ficha del partido contra ${match.versus}`}
             >
               Ficha partido
@@ -76,7 +77,7 @@ export function NextMatch({ match }: { match: Match }) {
               href={match.ficha_rival}
               rel="noopener noreferrer"
               target="_blank"
-              className="text-sm font-medium text-muted underline underline-offset-2 decoration-foreground/30 hover:text-primary hover:decoration-primary transition-colors"
+              className="text-sm font-medium text-muted underline underline-offset-2 decoration-foreground/30 hover:text-primary-light hover:decoration-primary transition-colors"
               aria-label={`Ver ficha de ${match.versus}`}
             >
               Ficha rival

@@ -7,15 +7,6 @@ interface NextMatchSectionProps {
   nextMatch: Match | null;
 }
 
-function LoadingState() {
-  return (
-    <div className="flex items-center gap-3 p-6 bg-surface backdrop-blur-sm border border-border rounded-2xl max-w-xl">
-      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      <p className="font-medium">Cargando partido...</p>
-    </div>
-  );
-}
-
 function SeasonEndedState() {
   return (
     <div className="flex flex-col sm:flex-row items-center gap-4 p-6 bg-surface backdrop-blur-sm border border-border rounded-2xl max-w-xl">
@@ -46,9 +37,7 @@ function MatchFoundState({ match }: { match: Match }) {
 }
 
 export function NextMatchSection({ nextMatch }: NextMatchSectionProps) {
-  if (!nextMatch) return <LoadingState />;
-
-  if (!nextMatch.versus) return <SeasonEndedState />;
+  if (!nextMatch?.versus) return <SeasonEndedState />;
 
   return <MatchFoundState match={nextMatch} />;
 }

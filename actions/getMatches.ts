@@ -65,7 +65,7 @@ export const getMatches = async (sheet?: SheetType): Promise<Match[]> => {
   }
 
   // 🔹 Caso 2: todas las hojas
-  const results = await Promise.all(
+  const results = await Promise.allSettled(
     Object.entries(SHEETS).map(async ([sheet, gid]) => {
       const res = await fetch(`${BASE_URL}?gid=${gid}&output=tsv`, {
         next: { tags: ["matches", `season-${sheet}`] },
@@ -84,6 +84,13 @@ export const getMatches = async (sheet?: SheetType): Promise<Match[]> => {
     }),
   );
 
-  // 🔥 Unificamos todo en un solo array
-  return results.flat();
+  // 🔥 Unificamos solo las hojas que respondieron bien
+  return results.flatMap((result) => {
+    if (result.status === "rejected") {
+      console.error("Error al obtener una temporada:", result.reason);
+      return [];
+    }
+
+    return result.value;
+  });
 };

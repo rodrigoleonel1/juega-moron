@@ -19,7 +19,16 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "Hoy juega Morón?",
       description,
+      url: "https://juegamoron.vercel.app",
       siteName: "Juega Morón",
+      images: [
+        {
+          url: "https://juegamoron.vercel.app/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Hoy juega Morón?",
+        },
+      ],
     },
   };
 }

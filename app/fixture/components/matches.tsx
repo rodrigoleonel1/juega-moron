@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, ArrowDown, ArrowUp } from "lucide-react";
 import { FixtureCard } from "@/components/fixture-card";
 import { Match } from "@/lib/types";
+import { parseArgentinaDateTime } from "@/lib/argentina-date";
 
 interface MatchesProps {
   matches: Match[];
@@ -18,7 +19,7 @@ export default function Matches({ matches }: MatchesProps) {
   const filteredAndSortedFixtures = matches
     .filter((match) => {
       const matchesSeason = match.temporada === season;
-      const matchDate = new Date(match.datetime);
+      const matchDate = parseArgentinaDateTime(match.datetime);
       const now = new Date();
       const isPlayed = !!match.result;
       const isUpcoming = !isPlayed && matchDate > now;
@@ -41,14 +42,20 @@ export default function Matches({ matches }: MatchesProps) {
     })
     .sort((a, b) => {
       if (sortOrder === "asc") {
-        return new Date(a.datetime).getTime() - new Date(b.datetime).getTime();
+        return (
+          parseArgentinaDateTime(a.datetime).getTime() -
+          parseArgentinaDateTime(b.datetime).getTime()
+        );
       } else {
-        return new Date(b.datetime).getTime() - new Date(a.datetime).getTime();
+        return (
+          parseArgentinaDateTime(b.datetime).getTime() -
+          parseArgentinaDateTime(a.datetime).getTime()
+        );
       }
     });
 
   return (
-    <section className="animate-fade-in mx-auto max-w-7xl">
+    <section className="animate-fade-in mx-auto max-w-7xl mb-12">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <h1 className="font-bold text-3xl sm:text-4xl tracking-tight">
           Fixture{" "}

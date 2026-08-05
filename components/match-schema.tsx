@@ -1,4 +1,5 @@
 import type { Match } from "@/lib/types";
+import { ARGENTINA_TIME_ZONE, parseArgentinaDateTime } from "@/lib/argentina-date";
 
 export function MatchSchema({ match }: { match: Match | null }) {
   if (!match?.versus) return null;
@@ -22,7 +23,7 @@ export function MatchSchema({ match }: { match: Match | null }) {
             { "@type": "SportsTeam", name: "Deportivo Morón" },
             { "@type": "SportsTeam", name: match.versus },
           ],
-          description: `Próximo partido: Deportivo Morón vs ${match.versus} el ${new Date(match.datetime).toLocaleDateString("es-AR")}`,
+          description: `Próximo partido: Deportivo Morón vs ${match.versus} el ${parseArgentinaDateTime(match.datetime).toLocaleDateString("es-AR", { timeZone: ARGENTINA_TIME_ZONE })}`,
         }),
       }}
     />

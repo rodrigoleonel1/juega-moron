@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { formatMatchDateFull } from "@/lib/utils";
 import { Match } from "@/lib/types";
+import { MORON_TEAM_ID } from "@/lib/constants";
 
 export function FixtureCard({ match }: { match: Match }) {
   const formatted = formatMatchDateFull(match.datetime);
@@ -28,7 +29,7 @@ export function FixtureCard({ match }: { match: Match }) {
       <div className="grid grid-cols-3 items-center gap-2 p-4">
         <div className="flex flex-col items-center text-center gap-1">
           <Image
-            src="https://api.promiedos.com.ar/images/team/hbba/1"
+            src={`https://api.promiedos.com.ar/images/team/${MORON_TEAM_ID}/1`}
             alt="Deportivo Morón"
             width={48}
             height={48}
@@ -43,7 +44,7 @@ export function FixtureCard({ match }: { match: Match }) {
               {match.result.split(" ")[0]}
             </span>
           ) : (
-            <span className="inline-block px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-bold">
+            <span className="inline-block px-2 py-0.5 bg-primary/10 text-primary-light rounded text-xs font-bold">
               VS
             </span>
           )}
@@ -55,6 +56,7 @@ export function FixtureCard({ match }: { match: Match }) {
             alt={match.versus}
             width={48}
             height={48}
+            loading="lazy"
             className="h-10 w-10 sm:h-12 sm:w-12"
           />
           <span className="text-[10px] font-medium text-muted leading-tight">{match.versus}</span>
@@ -100,7 +102,7 @@ export function FixtureCard({ match }: { match: Match }) {
             )}
           </div>
         ) : (
-          <div className="rounded-lg bg-primary/10 text-primary py-1.5 text-xs font-semibold text-center border border-primary/20">
+          <div className="rounded-lg bg-primary/10 text-primary-light py-1.5 text-xs font-semibold text-center border border-primary/20">
             Próximamente
           </div>
         )}

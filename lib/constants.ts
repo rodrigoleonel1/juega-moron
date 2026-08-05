@@ -1,4 +1,20 @@
-import { Jugador } from "./types";
+import { Jugador, Match } from "./types";
+
+export const MORON_TEAM_ID = "hbba";
+
+export const EMPTY_MATCH: Match = {
+  versus: "",
+  estadio: "",
+  isAway: false,
+  id_prom: "",
+  datetime: "",
+  ficha_partido: "",
+  ficha_rival: "",
+  youtube: "",
+  result: "",
+  competencia: "",
+  fecha: "",
+};
 
 export const JUGADORES: Jugador[] = [
   { nombre: "Lucas", apellido: "ABASCIA" },

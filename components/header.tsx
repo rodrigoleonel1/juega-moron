@@ -31,7 +31,8 @@ export function Header() {
         aria-label="Navegación principal"
       >
         {navItems.map((item) => {
-          const isActive = pathname === item.url;
+          const isActive =
+            pathname === item.url || pathname.startsWith(item.url + "/");
           return (
             <Link
               key={item.url}
@@ -39,8 +40,6 @@ export function Header() {
               className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${
                 isActive
                   ? "text-white bg-primary/10 backdrop-blur-sm"
-                  : scrolled
-                  ? "text-white/70 hover:text-white"
                   : "text-white/70 hover:text-white"
               }`}
               aria-current={isActive ? "page" : undefined}

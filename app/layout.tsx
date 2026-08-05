@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Barlow, Barlow_Condensed } from "next/font/google";
 import { Header } from "@/components/header";
 import "./globals.css";
 
-const outfit = Outfit({
+const barlow = Barlow({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-barlow",
+});
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-barlow-condensed",
 });
 
 const siteUrl = "https://juegamoron.vercel.app/";
@@ -41,7 +48,7 @@ export const metadata: Metadata = {
     siteName: "Hoy juega Morón?",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Hoy juega Morón?",
@@ -55,7 +62,7 @@ export const metadata: Metadata = {
     title: "Hoy juega Morón? - Próximo partido y resultados",
     description:
       "Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados recientes y más sobre el Gallo.",
-    images: [`${siteUrl}/og-image.png`],
+    images: [`${siteUrl}/og-image.jpg`],
   },
   robots: {
     index: true,
@@ -73,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={outfit.variable}>
+    <html lang="es" className={`${barlow.variable} ${barlowCondensed.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta

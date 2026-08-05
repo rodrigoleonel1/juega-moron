@@ -1,6 +1,7 @@
 "use client";
 
 import { useCountdown } from "@/hooks/use-countdown";
+import { parseArgentinaDateTime } from "@/lib/argentina-date";
 
 interface CountdownDisplayProps {
   match_date: string;
@@ -9,7 +10,7 @@ interface CountdownDisplayProps {
 export function CountdownDisplay({
   match_date,
 }: CountdownDisplayProps) {
-  const countdown = useCountdown(new Date(match_date));
+  const countdown = useCountdown(parseArgentinaDateTime(match_date));
 
   const countdownItems = [
     { value: countdown.days.toString().padStart(2, "0"), label: "Días" },
@@ -21,9 +22,9 @@ export function CountdownDisplay({
   return (
     <section className="max-w-xl">
       <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl p-4">
-        <p className="text-muted text-sm font-medium mb-4 text-center">
+        <h2 className="font-display mb-4 text-center text-sm font-semibold uppercase tracking-[0.22em] text-muted">
           Próximo partido en
-        </p>
+        </h2>
         <div className="grid grid-cols-4 gap-2 sm:gap-4">
           {countdownItems.map((item, index) => (
             <div key={index} className="text-center overflow-hidden">

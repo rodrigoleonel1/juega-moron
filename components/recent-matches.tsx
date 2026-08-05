@@ -4,7 +4,9 @@ import { Plane, Home } from "lucide-react";
 export function RecentMatches({ recentMatches }: { recentMatches: Match[] }) {
   return (
     <section className="max-w-xl">
-      <h3 className="font-bold text-lg mb-3">Últimos 5 partidos</h3>
+      <h2 className="font-display mb-3 text-xl font-semibold uppercase tracking-wide">
+        Últimos 5 partidos
+      </h2>
       <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden divide-y divide-border">
         {recentMatches.length > 0 ? (
           recentMatches.map((match) => (

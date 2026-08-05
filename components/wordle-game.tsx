@@ -1,8 +1,16 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { Jugador } from "@/lib/types";
-import { isValidWord } from "@/lib/wordle";
+import { isValidWord, getDailyIndex } from "@/lib/wordle";
+import { getArgentinaDateKey } from "@/lib/argentina-date";
+import {
+  loadStats,
+  saveStats,
+  recordResult,
+  WordleStats as WordleStatsType,
+} from "@/lib/wordle-stats";
+import { WordleStatsPanel } from "@/components/wordle-stats-panel";
 
 const MAX_ATTEMPTS = 6;
 
@@ -20,8 +28,30 @@ interface SavedGame {
 }
 
 function getDateKey(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+  return getArgentinaDateKey();
+}
+
+function buildResultMessage(won: boolean, jugador: Jugador | undefined, target: string): string {
+  if (won) {
+    return jugador ? `¡Ganaste! El jugador era ${jugador.nombre} ${jugador.apellido}` : "¡Ganaste!";
+  }
+  return jugador ? `¡Perdiste! El jugador era ${jugador.nombre} ${jugador.apellido}` : `Perdiste. Era ${target}`;
+}
+
+function loadSavedGame(target: string): SavedGame | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const saved = window.localStorage.getItem("wordle-moron");
+    if (!saved) return null;
+
+    const g: SavedGame = JSON.parse(saved);
+    if (g.date === getDateKey() && g.target === target) return g;
+
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 function getLetterState(
@@ -36,29 +66,38 @@ function getLetterState(
 
 export function WordleGame({ target, jugador }: { target: string; jugador?: Jugador }) {
   const wordLength = target.length;
-  const [guesses, setGuesses] = useState<Guess[]>([]);
+  const [saved] = useState<SavedGame | null>(() => loadSavedGame(target));
+  const [guesses, setGuesses] = useState<Guess[]>(() => saved?.guesses ?? []);
   const [currentGuess, setCurrentGuess] = useState("");
-  const [gameOver, setGameOver] = useState(false);
-  const [won, setWon] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [gameOver, setGameOver] = useState(() => saved !== null);
+  const [won, setWon] = useState(() => saved?.won ?? false);
+  const [message, setMessage] = useState<string | null>(() =>
+    saved ? buildResultMessage(saved.won, jugador, target) : null
+  );
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [alreadyPlayed, setAlreadyPlayed] = useState(false);
+  const alreadyPlayed = saved !== null;
+  const [stats, setStats] = useState<WordleStatsType>(loadStats);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("wordle-moron");
-    if (saved) {
-      const g: SavedGame = JSON.parse(saved);
-      if (g.date === getDateKey() && g.target === target) {
-        setAlreadyPlayed(true);
-        setGuesses(g.guesses);
-        setWon(g.won);
-        setGameOver(true);
-        setMessage(g.won
-          ? (jugador ? `¡Ganaste! El jugador era ${jugador.nombre} ${jugador.apellido}` : "¡Ganaste!")
-          : (jugador ? `¡Perdiste! El jugador era ${jugador.nombre} ${jugador.apellido}` : `Perdiste. Era ${target}`));
-      }
-    }
-  }, [target]);
+  const shareText = useMemo(() => {
+    if (!gameOver) return undefined;
+
+    const day = getDailyIndex();
+    const rows = guesses
+      .map((guess) =>
+        guess.letters
+          .map((letter) =>
+            letter.state === "correct"
+              ? "🟩"
+              : letter.state === "present"
+              ? "🟨"
+              : "⬛"
+          )
+          .join("")
+      )
+      .join("\n");
+
+    return `Wordle Morón #${day} ${won ? guesses.length : "X"}/${MAX_ATTEMPTS}\n${rows}`;
+  }, [gameOver, guesses, won]);
 
   const saveGame = useCallback((guesses: Guess[], won: boolean) => {
     const g: SavedGame = {
@@ -68,6 +107,10 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
       date: getDateKey(),
     };
     localStorage.setItem("wordle-moron", JSON.stringify(g));
+
+    const nextStats = recordResult(loadStats(), won, guesses.length, getDateKey());
+    saveStats(nextStats);
+    setStats(nextStats);
   }, [target]);
 
   const addLetter = useCallback(
@@ -89,7 +132,7 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
     if (gameOver || alreadyPlayed || currentGuess.length !== wordLength) return;
 
     if (!isValidWord(currentGuess)) {
-      setValidationError("El nombre no esta en nuestra base de datos");
+      setValidationError("El nombre no está en nuestra base de datos");
       return;
     }
 
@@ -107,14 +150,14 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
     if (isWon) {
       setWon(true);
       setGameOver(true);
-      setMessage(jugador ? `¡Ganaste! El jugador era ${jugador.nombre} ${jugador.apellido}` : "¡Ganaste!");
+      setMessage(buildResultMessage(true, jugador, target));
       saveGame(newGuesses, true);
       return;
     }
 
     if (newGuesses.length >= MAX_ATTEMPTS) {
       setGameOver(true);
-      setMessage(jugador ? `¡Perdiste! El jugador era ${jugador.nombre} ${jugador.apellido}` : `Perdiste. Era ${target}`);
+      setMessage(buildResultMessage(false, jugador, target));
       saveGame(newGuesses, false);
     }
   }, [gameOver, alreadyPlayed, currentGuess, target, guesses, wordLength, saveGame, jugador]);
@@ -160,7 +203,7 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
     return (
       <div className="flex flex-col items-center gap-4 max-w-lg mx-auto">
         <p className="font-bold text-xl">Ya jugaste hoy</p>
-        <p className="text-muted text-sm">Volvé mañana para una nueva palabra.</p>
+        <p className="text-white text-sm">Volvé mañana para una nueva palabra.</p>
 
         <div className="grid grid-rows-6 gap-1.5">
           {Array.from({ length: MAX_ATTEMPTS }).map((_, row) => {
@@ -171,9 +214,9 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                   const char = guess ? guess.letters[col].char : "";
                   const state = guess ? guess.letters[col].state : "empty";
                   const stateStyles = {
-                    correct: "bg-green-600 border-green-600 text-white",
-                    present: "bg-yellow-600 border-yellow-600 text-white",
-                    absent: "bg-neutral-800 border-neutral-800 text-white",
+                    correct: "bg-success border-success text-white",
+                    present: "bg-warning border-warning text-white",
+                    absent: "bg-absent border-absent text-white",
                     empty: "bg-surface backdrop-blur-sm border border-border text-foreground",
                   };
                   return (
@@ -191,10 +234,10 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
         </div>
 
         <p className="text-lg">
-          {won
-            ? (jugador ? `¡Ganaste! El jugador era ${jugador.nombre} ${jugador.apellido}` : "¡Ganaste!")
-            : (jugador ? `¡Perdiste! El jugador era ${jugador.nombre} ${jugador.apellido}` : `Perdiste. Era ${target}`)}
+          {buildResultMessage(won, jugador, target)}
         </p>
+
+        <WordleStatsPanel stats={stats} shareText={shareText} />
       </div>
     );
   }
@@ -220,9 +263,9 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                 }
 
                 const stateStyles = {
-                  correct: "bg-green-600 border-green-600 text-white",
-                  present: "bg-yellow-600 border-yellow-600 text-white",
-                  absent: "bg-neutral-800 border-neutral-800 text-white",
+                  correct: "bg-success border-success text-white",
+                  present: "bg-warning border-warning text-white",
+                  absent: "bg-absent border-absent text-white",
                   empty: state === "empty" && isCurrentRow && char
                     ? "bg-surface backdrop-blur-sm border border-primary/50 text-foreground"
                     : "bg-surface backdrop-blur-sm border border-border text-foreground",
@@ -244,17 +287,17 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
         })}
       </div>
 
-      {message && (
-        <div className="text-sm font-semibold bg-surface backdrop-blur-sm border border-border px-4 py-2 rounded-lg">
-          {message}
-        </div>
-      )}
-
-      <div className="h-8 flex items-center justify-center">
-        {validationError && (
-          <p className="text-sm font-semibold text-red-500">{validationError}</p>
-        )}
+      <div className="flex min-h-16 w-full items-center justify-center px-4 text-center">
+        {message ? (
+          <div className="text-sm font-semibold bg-surface backdrop-blur-sm border border-border px-4 py-2 rounded-lg">
+            {message}
+          </div>
+        ) : validationError ? (
+          <p className="text-sm font-semibold text-error">{validationError}</p>
+        ) : null}
       </div>
+
+      {gameOver && <WordleStatsPanel stats={stats} shareText={shareText} />}
 
       <div className="flex flex-col items-center gap-1.5">
         {keyboardRows.map((row, i) => (
@@ -265,7 +308,7 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                   <button
                     key={key}
                     onClick={submitGuess}
-                    className="px-3 h-12 bg-neutral-700 hover:bg-neutral-600 text-white text-xs font-bold rounded transition-colors"
+                    className="px-3 h-12 bg-key hover:bg-key-hover text-white text-xs font-bold rounded transition-colors"
                   >
                     ENTER
                   </button>
@@ -276,17 +319,17 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                   <button
                     key={key}
                     onClick={removeLetter}
-                    className="px-3 h-12 bg-neutral-700 hover:bg-neutral-600 text-white text-xs font-bold rounded transition-colors"
+                    className="px-3 h-12 bg-key hover:bg-key-hover text-white text-xs font-bold rounded transition-colors"
                   >
                     ←
                   </button>
                 );
               }
               const kState = getKeyState(key);
-              const keyBg = kState === "correct" ? "bg-green-600"
-                : kState === "present" ? "bg-yellow-600"
-                : kState === "absent" ? "bg-neutral-800"
-                : "bg-neutral-700";
+              const keyBg = kState === "correct" ? "bg-success"
+                : kState === "present" ? "bg-warning"
+                : kState === "absent" ? "bg-absent"
+                : "bg-key";
 
               return (
                 <button

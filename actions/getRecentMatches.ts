@@ -1,5 +1,6 @@
 import { Match } from "@/lib/types";
 import { getMatches } from "./getMatches";
+import { EMPTY_MATCH } from "@/lib/constants";
 
 export const getRecentMatches = async (limit = 5): Promise<Match[] | null> => {
   try {
@@ -17,16 +18,6 @@ export const getRecentMatches = async (limit = 5): Promise<Match[] | null> => {
   } catch (error) {
     console.error("Error al obtener partidos recientes:", error);
 
-    return Array(limit).fill({
-      versus: "",
-      estadio: "",
-      isAway: false,
-      id_prom: "",
-      datetime: "",
-      ficha_partido: "",
-      ficha_rival: "",
-      youtube: "",
-      result: "",
-    });
+    return Array.from({ length: limit }, () => EMPTY_MATCH);
   }
 };

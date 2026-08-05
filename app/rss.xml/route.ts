@@ -1,4 +1,5 @@
 import { getMatches } from "@/actions/getMatches";
+import { ARGENTINA_TIME_ZONE, parseArgentinaDateTime } from "@/lib/argentina-date";
 
 export async function GET() {
   const baseUrl = "https://juegamoron.vercel.app";
@@ -8,7 +9,8 @@ export async function GET() {
     const items = matches
       .sort(
         (a, b) =>
-          new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+          parseArgentinaDateTime(b.datetime).getTime() -
+          parseArgentinaDateTime(a.datetime).getTime()
       )
       .slice(0, 20)
       .map(
@@ -16,8 +18,8 @@ export async function GET() {
     <item>
       <title>${m.versus ? `Deportivo Morón vs ${m.versus}` : "Partido de Deportivo Morón"}</title>
       <link>${baseUrl}/fixture</link>
-      <description>${m.result ? `Resultado: ${m.result}` : `Próximo partido: ${new Date(m.datetime).toLocaleDateString("es-AR")}`}</description>
-      <pubDate>${new Date(m.datetime).toUTCString()}</pubDate>
+      <description>${m.result ? `Resultado: ${m.result}` : `Próximo partido: ${parseArgentinaDateTime(m.datetime).toLocaleDateString("es-AR", { timeZone: ARGENTINA_TIME_ZONE })}`}</description>
+      <pubDate>${parseArgentinaDateTime(m.datetime).toUTCString()}</pubDate>
     </item>`
       )
       .join("");
