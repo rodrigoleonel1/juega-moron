@@ -1,8 +1,8 @@
 export default function Loading() {
   return (
-    <section className="animate-pulse">
+    <section className="animate-pulse" aria-hidden="true" aria-busy="true">
       <div className="mb-6 max-w-xl">
-        <div className="h-24 sm:h-32 w-96 bg-white/5 rounded-lg" />
+        <div className="h-24 sm:h-32 w-full max-w-sm bg-white/5 rounded-lg" />
       </div>
       <div className="max-w-xl space-y-4">
         <div className="h-48 bg-white/5 rounded-2xl" />

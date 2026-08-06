@@ -9,7 +9,7 @@ interface NextMatchSectionProps {
 
 function SeasonEndedState() {
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 p-6 bg-surface backdrop-blur-sm border border-border rounded-2xl max-w-xl">
+    <div className="card flex flex-col sm:flex-row items-center gap-4 p-6 max-w-xl">
       <Image
         src="/moron.png"
         alt="Club Deportivo Morón"

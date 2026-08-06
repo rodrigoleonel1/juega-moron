@@ -11,7 +11,7 @@ export function NextMatch({ match }: { match: Match }) {
 
   return (
     <section className="max-w-xl" aria-label={`Próximo partido contra ${match.versus}`}>
-      <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="bg-primary/5 px-4 py-3">
           <div className="grid grid-cols-3 items-center gap-3">
             <div className="flex flex-col items-center text-center">
@@ -27,7 +27,7 @@ export function NextMatch({ match }: { match: Match }) {
             </div>
 
             <div className="text-center">
-              <span className="inline-block px-3 py-1 bg-primary/10 text-primary-light rounded-lg text-sm font-bold">
+              <span className="font-display inline-block px-3 py-1 bg-primary/10 text-primary-light rounded-lg text-sm font-bold uppercase">
                 VS
               </span>
               <div className="mt-1.5">

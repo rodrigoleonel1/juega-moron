@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
 import { Jugador } from "@/lib/types";
 import { isValidWord, getDailyIndex } from "@/lib/wordle";
 import { getArgentinaDateKey } from "@/lib/argentina-date";
@@ -54,6 +54,26 @@ function loadSavedGame(target: string): SavedGame | null {
   }
 }
 
+function subscribeToStorage(onStoreChange: () => void) {
+  window.addEventListener("storage", onStoreChange);
+  return () => window.removeEventListener("storage", onStoreChange);
+}
+
+let savedGameCache: { key: string; value: SavedGame | null } = {
+  key: "",
+  value: null,
+};
+
+function getSavedGameSnapshot(target: string): SavedGame | null {
+  const key = `${getDateKey()}|${target}`;
+
+  if (savedGameCache.key !== key) {
+    savedGameCache = { key, value: loadSavedGame(target) };
+  }
+
+  return savedGameCache.value;
+}
+
 function getLetterState(
   guess: string,
   target: string,
@@ -64,19 +84,40 @@ function getLetterState(
   return "absent";
 }
 
+const STATE_LABEL: Record<LetterState, string> = {
+  correct: "está en la posición correcta",
+  present: "está en el apellido, pero en otra posición",
+  absent: "no está en el apellido",
+  empty: "",
+};
+
+function getCellLabel(char: string, state: LetterState): string {
+  if (!char || state === "empty") return "celda vacía";
+  return `${char}, ${STATE_LABEL[state]}`;
+}
+
 export function WordleGame({ target, jugador }: { target: string; jugador?: Jugador }) {
   const wordLength = target.length;
-  const [saved] = useState<SavedGame | null>(() => loadSavedGame(target));
-  const [guesses, setGuesses] = useState<Guess[]>(() => saved?.guesses ?? []);
-  const [currentGuess, setCurrentGuess] = useState("");
-  const [gameOver, setGameOver] = useState(() => saved !== null);
-  const [won, setWon] = useState(() => saved?.won ?? false);
-  const [message, setMessage] = useState<string | null>(() =>
-    saved ? buildResultMessage(saved.won, jugador, target) : null
+  const saved = useSyncExternalStore(
+    subscribeToStorage,
+    () => getSavedGameSnapshot(target),
+    () => null
   );
+  const [localGuesses, setLocalGuesses] = useState<Guess[]>([]);
+  const [currentGuess, setCurrentGuess] = useState("");
+  const [localGameOver, setLocalGameOver] = useState(false);
+  const [localWon, setLocalWon] = useState(false);
+  const [localMessage, setLocalMessage] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const alreadyPlayed = saved !== null;
   const [stats, setStats] = useState<WordleStatsType>(loadStats);
+
+  const alreadyPlayed = saved !== null;
+  const guesses = saved?.guesses ?? localGuesses;
+  const gameOver = alreadyPlayed || localGameOver;
+  const won = saved?.won ?? localWon;
+  const message = saved
+    ? buildResultMessage(saved.won, jugador, target)
+    : localMessage;
 
   const shareText = useMemo(() => {
     if (!gameOver) return undefined;
@@ -107,6 +148,8 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
       date: getDateKey(),
     };
     localStorage.setItem("wordle-moron", JSON.stringify(g));
+
+    savedGameCache = { key: "", value: null };
 
     const nextStats = recordResult(loadStats(), won, guesses.length, getDateKey());
     saveStats(nextStats);
@@ -142,22 +185,22 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
     }));
 
     const newGuesses = [...guesses, { letters }];
-    setGuesses(newGuesses);
+    setLocalGuesses(newGuesses);
     setCurrentGuess("");
     setValidationError(null);
 
     const isWon = currentGuess === target;
     if (isWon) {
-      setWon(true);
-      setGameOver(true);
-      setMessage(buildResultMessage(true, jugador, target));
+      setLocalWon(true);
+      setLocalGameOver(true);
+      setLocalMessage(buildResultMessage(true, jugador, target));
       saveGame(newGuesses, true);
       return;
     }
 
     if (newGuesses.length >= MAX_ATTEMPTS) {
-      setGameOver(true);
-      setMessage(buildResultMessage(false, jugador, target));
+      setLocalGameOver(true);
+      setLocalMessage(buildResultMessage(false, jugador, target));
       saveGame(newGuesses, false);
     }
   }, [gameOver, alreadyPlayed, currentGuess, target, guesses, wordLength, saveGame, jugador]);
@@ -205,23 +248,25 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
         <p className="font-bold text-xl">Ya jugaste hoy</p>
         <p className="text-white text-sm">Volvé mañana para una nueva palabra.</p>
 
-        <div className="grid grid-rows-6 gap-1.5">
+        <div role="grid" aria-label="Tablero de Wordle Morón" className="grid grid-rows-6 gap-1.5">
           {Array.from({ length: MAX_ATTEMPTS }).map((_, row) => {
             const guess = guesses[row] || null;
             return (
-              <div key={row} className="flex gap-1.5 justify-center">
+              <div key={row} role="row" className="flex gap-1.5 justify-center">
                 {Array.from({ length: wordLength }).map((_, col) => {
                   const char = guess ? guess.letters[col].char : "";
                   const state = guess ? guess.letters[col].state : "empty";
                   const stateStyles = {
-                    correct: "bg-success border-success text-white",
-                    present: "bg-warning border-warning text-white",
+                    correct: "bg-success border-success text-black",
+                    present: "bg-warning border-warning text-black",
                     absent: "bg-absent border-absent text-white",
                     empty: "bg-surface backdrop-blur-sm border border-border text-foreground",
                   };
                   return (
                     <div
                       key={col}
+                      role="gridcell"
+                      aria-label={getCellLabel(char, state)}
                       className={`${cellSize} h-14 flex items-center justify-center text-lg font-bold rounded border transition-colors ${stateStyles[state]}`}
                     >
                       {char}
@@ -233,7 +278,7 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
           })}
         </div>
 
-        <p className="text-lg">
+        <p className="text-lg" aria-live="polite">
           {buildResultMessage(won, jugador, target)}
         </p>
 
@@ -244,13 +289,13 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
 
   return (
     <div className="flex flex-col items-center gap-4 max-w-lg mx-auto">
-      <div className="grid grid-rows-6 gap-1.5">
+      <div role="grid" aria-label="Tablero de Wordle Morón" className="grid grid-rows-6 gap-1.5">
         {Array.from({ length: MAX_ATTEMPTS }).map((_, row) => {
           const guess = guesses[row] || null;
           const isCurrentRow = row === guesses.length;
 
           return (
-            <div key={row} className="flex gap-1.5 justify-center">
+            <div key={row} role="row" className="flex gap-1.5 justify-center">
               {Array.from({ length: wordLength }).map((_, col) => {
                 let char = "";
                 let state: LetterState = "empty";
@@ -263,8 +308,8 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                 }
 
                 const stateStyles = {
-                  correct: "bg-success border-success text-white",
-                  present: "bg-warning border-warning text-white",
+                  correct: "bg-success border-success text-black",
+                  present: "bg-warning border-warning text-black",
                   absent: "bg-absent border-absent text-white",
                   empty: state === "empty" && isCurrentRow && char
                     ? "bg-surface backdrop-blur-sm border border-primary/50 text-foreground"
@@ -274,6 +319,8 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                 return (
                   <div
                     key={col}
+                    role="gridcell"
+                    aria-label={getCellLabel(char, state)}
                     className={`${cellSize} h-14 flex items-center justify-center text-lg font-bold rounded border transition-colors ${
                       stateStyles[state]
                     }`}
@@ -287,13 +334,18 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
         })}
       </div>
 
-      <div className="flex min-h-16 w-full items-center justify-center px-4 text-center">
+      <div
+        className="flex min-h-16 w-full items-center justify-center px-4 text-center"
+        aria-live="polite"
+      >
         {message ? (
           <div className="text-sm font-semibold bg-surface backdrop-blur-sm border border-border px-4 py-2 rounded-lg">
             {message}
           </div>
         ) : validationError ? (
-          <p className="text-sm font-semibold text-error">{validationError}</p>
+          <p role="alert" className="text-sm font-semibold text-error">
+            {validationError}
+          </p>
         ) : null}
       </div>
 
@@ -308,6 +360,7 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                   <button
                     key={key}
                     onClick={submitGuess}
+                    aria-label="Enviar intento"
                     className="px-3 h-12 bg-key hover:bg-key-hover text-white text-xs font-bold rounded transition-colors"
                   >
                     ENTER
@@ -319,6 +372,7 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                   <button
                     key={key}
                     onClick={removeLetter}
+                    aria-label="Borrar letra"
                     className="px-3 h-12 bg-key hover:bg-key-hover text-white text-xs font-bold rounded transition-colors"
                   >
                     ←
@@ -330,12 +384,17 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
                 : kState === "present" ? "bg-warning"
                 : kState === "absent" ? "bg-absent"
                 : "bg-key";
+              const keyText =
+                kState === "correct" || kState === "present"
+                  ? "text-black"
+                  : "text-white";
 
               return (
                 <button
                   key={key}
                   onClick={() => addLetter(key)}
-                  className={`w-9 h-12 ${keyBg} hover:brightness-110 text-white text-sm font-bold rounded transition-all`}
+                  aria-label={`Letra ${key}`}
+                  className={`w-9 h-12 ${keyBg} hover:brightness-110 ${keyText} text-sm font-bold rounded transition-all`}
                 >
                   {key}
                 </button>

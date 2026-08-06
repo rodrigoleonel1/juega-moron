@@ -21,28 +21,30 @@ export function CountdownDisplay({
 
   return (
     <section className="max-w-xl">
-      <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl p-4">
-        <h2 className="font-display mb-4 text-center text-sm font-semibold uppercase tracking-[0.22em] text-muted">
-          Próximo partido en
-        </h2>
-        <div className="grid grid-cols-4 gap-2 sm:gap-4">
-          {countdownItems.map((item, index) => (
-            <div key={index} className="text-center overflow-hidden">
-              <p className="font-bold text-5xl tabular-nums text-primary leading-none">
-                {item.value.split("").map((char, i) => (
-                  <span
-                    key={char + "-" + i}
-                    className="animate-slide-up inline-block"
-                  >
-                    {char}
-                  </span>
-                ))}
-              </p>
-              <p className="text-xs text-muted font-medium mt-1.5">
-                {item.label}
-              </p>
-            </div>
-          ))}
+      <div className="card overflow-hidden">
+        <div className="p-4 sm:p-5">
+          <h2 className="font-display mb-4 text-center text-sm font-semibold uppercase tracking-[0.22em] text-muted">
+            Próximo partido en
+          </h2>
+          <div className="grid grid-cols-4 gap-2 sm:gap-4">
+            {countdownItems.map((item, index) => (
+              <div key={index} className="text-center overflow-hidden">
+                <p className="font-display font-bold text-5xl sm:text-6xl tabular-nums text-primary leading-none">
+                  {item.value.split("").map((char, i) => (
+                    <span
+                      key={char + "-" + i}
+                      className="animate-slide-up inline-block"
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </p>
+                <p className="text-xs text-muted font-medium mt-1.5">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

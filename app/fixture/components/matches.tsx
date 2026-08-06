@@ -3,18 +3,22 @@
 import { useState } from "react";
 import { Search, ArrowDown, ArrowUp } from "lucide-react";
 import { FixtureCard } from "@/components/fixture-card";
-import { Match } from "@/lib/types";
+import { Match, Season } from "@/lib/types";
 import { parseArgentinaDateTime } from "@/lib/argentina-date";
+import { getResultOutcome } from "@/lib/utils";
+
+type MatchFilterStatus = "all" | "upcoming" | "played" | "won" | "lost" | "drawn";
+type MatchSortOrder = "asc" | "desc";
 
 interface MatchesProps {
   matches: Match[];
 }
 
 export default function Matches({ matches }: MatchesProps) {
-  const [season, setSeason] = useState<"TEMP25" | "TEMP26">("TEMP26");
+  const [season, setSeason] = useState<Season>("TEMP26");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [filterStatus, setFilterStatus] = useState<MatchFilterStatus>("all");
+  const [sortOrder, setSortOrder] = useState<MatchSortOrder>("desc");
 
   const filteredAndSortedFixtures = matches
     .filter((match) => {
@@ -26,17 +30,18 @@ export default function Matches({ matches }: MatchesProps) {
       const matchesSearch = match.versus
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
+      const outcome = getResultOutcome(match.result);
       let matchesStatus = true;
       if (filterStatus === "played") {
         matchesStatus = isPlayed;
       } else if (filterStatus === "upcoming") {
         matchesStatus = isUpcoming;
       } else if (filterStatus === "won") {
-        matchesStatus = match.result?.includes("(G)") || false;
+        matchesStatus = outcome === "G";
       } else if (filterStatus === "lost") {
-        matchesStatus = match.result?.includes("(P)") || false;
+        matchesStatus = outcome === "P";
       } else if (filterStatus === "drawn") {
-        matchesStatus = match.result?.includes("(E)") || false;
+        matchesStatus = outcome === "E";
       }
       return matchesSearch && matchesStatus && matchesSeason;
     })
@@ -57,7 +62,7 @@ export default function Matches({ matches }: MatchesProps) {
   return (
     <section className="animate-fade-in mx-auto max-w-7xl mb-12">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-        <h1 className="font-bold text-3xl sm:text-4xl tracking-tight">
+        <h1 className="font-display font-bold text-4xl sm:text-5xl uppercase tracking-tight">
           Fixture{" "}
           <span className="text-primary">
             {season === "TEMP26" ? "2026" : "2025"}
@@ -66,6 +71,7 @@ export default function Matches({ matches }: MatchesProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setSeason("TEMP26")}
+            aria-pressed={season === "TEMP26"}
             className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
               season === "TEMP26"
                 ? "bg-primary text-white"
@@ -76,6 +82,7 @@ export default function Matches({ matches }: MatchesProps) {
           </button>
           <button
             onClick={() => setSeason("TEMP25")}
+            aria-pressed={season === "TEMP25"}
             className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
               season === "TEMP25"
                 ? "bg-primary text-white"
@@ -106,7 +113,7 @@ export default function Matches({ matches }: MatchesProps) {
           <select
             value={filterStatus}
             aria-label="Filtrar por estado del partido"
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={(e) => setFilterStatus(e.target.value as MatchFilterStatus)}
             className="px-3 py-2.5 rounded-lg bg-surface backdrop-blur-sm border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
           >
             <option value="all">Todos</option>
@@ -134,14 +141,14 @@ export default function Matches({ matches }: MatchesProps) {
 
       {filteredAndSortedFixtures.length > 0 ? (
         <ul className="grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-          {filteredAndSortedFixtures.map((match: Match) => (
+          {filteredAndSortedFixtures.map((match: Match, index) => (
             <li key={match.datetime}>
-              <FixtureCard match={match} />
+              <FixtureCard match={match} priority={index === 0} />
             </li>
           ))}
         </ul>
       ) : (
-        <div className="text-center py-12 px-6 bg-surface backdrop-blur-sm border border-border rounded-2xl">
+        <div className="card text-center py-12 px-6">
           <p className="font-bold text-lg text-muted">No se encontraron partidos</p>
           <p className="text-muted text-sm mt-1">Probá con otros filtros o cambiá de temporada.</p>
         </div>

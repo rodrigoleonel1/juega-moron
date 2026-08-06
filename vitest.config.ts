@@ -9,6 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    setupFiles: ["./vitest.setup.ts"],
     env: {
       SHEETS_BASE_URL: "https://example.com/sheets/pub",
     },

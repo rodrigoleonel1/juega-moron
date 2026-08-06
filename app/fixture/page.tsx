@@ -3,11 +3,11 @@ import { getMatches } from "@/actions/getMatches";
 import Matches from "./components/matches";
 
 export const metadata: Metadata = {
-  title: "Fixture - Hoy juega Morón?",
+  title: "Fixture",
   description:
     "Calendario completo de partidos de Deportivo Morón. Resultados, próximos partidos y más.",
   openGraph: {
-    title: "Fixture - Hoy juega Morón?",
+    title: "Fixture",
     description:
       "Calendario completo de partidos de Deportivo Morón. Resultados, próximos partidos y más.",
   },

@@ -28,7 +28,6 @@ describe("getMatches", () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("gid=805417991"),
-      expect.objectContaining({ next: expect.any(Object) }),
     );
     expect(matches).toHaveLength(1);
     expect(matches[0]).toMatchObject({

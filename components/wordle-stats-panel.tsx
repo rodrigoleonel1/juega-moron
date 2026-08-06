@@ -29,7 +29,7 @@ export function WordleStatsPanel({ stats, shareText }: WordleStatsPanelProps) {
   };
 
   return (
-    <div className="w-full bg-surface backdrop-blur-sm border border-border rounded-2xl p-5 space-y-4">
+    <div className="card w-full p-5 space-y-4">
       <h3 className="font-bold text-center">Estadísticas</h3>
 
       <div className="grid grid-cols-4 gap-2 text-center">
@@ -80,6 +80,7 @@ export function WordleStatsPanel({ stats, shareText }: WordleStatsPanelProps) {
       {shareText && (
         <button
           onClick={handleShare}
+          aria-live="polite"
           className="w-full rounded-lg bg-primary text-white hover:bg-primary-hover py-2.5 text-sm font-semibold transition-colors cursor-pointer"
         >
           {copied ? "¡Copiado!" : "Compartir resultado"}

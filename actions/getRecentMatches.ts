@@ -1,4 +1,5 @@
 import { Match } from "@/lib/types";
+import { parseArgentinaDateTime } from "@/lib/argentina-date";
 import { getMatches } from "./getMatches";
 import { EMPTY_MATCH } from "@/lib/constants";
 
@@ -11,7 +12,9 @@ export const getRecentMatches = async (limit = 5): Promise<Match[] | null> => {
     );
 
     const sortedMatches = playedMatches.sort(
-      (a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+      (a, b) =>
+        parseArgentinaDateTime(b.datetime).getTime() -
+        parseArgentinaDateTime(a.datetime).getTime()
     );
 
     return sortedMatches.slice(0, limit);

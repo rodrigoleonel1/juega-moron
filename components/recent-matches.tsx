@@ -1,5 +1,12 @@
-import { Match } from "@/lib/types";
+import { Match, MatchResult } from "@/lib/types";
 import { Plane, Home } from "lucide-react";
+import { getResultOutcome, RESULT_OUTCOME_CLASS } from "@/lib/utils";
+
+const OUTCOME_LABEL: Record<MatchResult, string> = {
+  G: "Resultado: ganó Morón.",
+  E: "Resultado: empató Morón.",
+  P: "Resultado: perdió Morón.",
+};
 
 export function RecentMatches({ recentMatches }: { recentMatches: Match[] }) {
   return (
@@ -7,36 +14,35 @@ export function RecentMatches({ recentMatches }: { recentMatches: Match[] }) {
       <h2 className="font-display mb-3 text-xl font-semibold uppercase tracking-wide">
         Últimos 5 partidos
       </h2>
-      <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden divide-y divide-border">
+      <div className="card overflow-hidden divide-y divide-border">
         {recentMatches.length > 0 ? (
-          recentMatches.map((match) => (
-            <div
-              key={match.datetime}
-              className="flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                {match.isAway ? (
-                  <Plane size={14} className="text-muted shrink-0" aria-hidden="true" />
-                ) : (
-                  <Home size={14} className="text-muted shrink-0" aria-hidden="true" />
-                )}
-                <span className="text-sm font-medium">vs. {match.versus}</span>
-              </div>
-              <span
-                className={`text-sm font-semibold ${
-                  match.result?.includes("(G)")
-                    ? "text-success"
-                    : match.result?.includes("(P)")
-                    ? "text-error"
-                    : match.result?.includes("(E)")
-                    ? "text-warning"
-                    : "text-muted"
-                }`}
+          recentMatches.map((match) => {
+            const outcome = getResultOutcome(match.result);
+
+            return (
+              <div
+                key={match.datetime}
+                className="flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors"
               >
-                {match.result || "—"}
-              </span>
-            </div>
-          ))
+                <div className="flex items-center gap-2">
+                  {match.isAway ? (
+                    <Plane size={14} className="text-muted shrink-0" aria-hidden="true" />
+                  ) : (
+                    <Home size={14} className="text-muted shrink-0" aria-hidden="true" />
+                  )}
+                  <span className="text-sm font-medium">vs. {match.versus}</span>
+                </div>
+                <span
+                  className={`text-sm font-semibold ${
+                    outcome ? RESULT_OUTCOME_CLASS[outcome] : "text-muted"
+                  }`}
+                >
+                  {outcome && <span className="sr-only">{OUTCOME_LABEL[outcome]} </span>}
+                  {match.result || "—"}
+                </span>
+              </div>
+            );
+          })
         ) : (
           <div className="px-4 py-6 text-center text-muted text-sm">
             No hay partidos recientes

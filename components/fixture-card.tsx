@@ -1,31 +1,17 @@
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
-import { formatMatchDateFull } from "@/lib/utils";
+import { formatMatchDateFull, getResultOutcome, RESULT_OUTCOME_CLASS } from "@/lib/utils";
 import { Match } from "@/lib/types";
 import { MORON_TEAM_ID } from "@/lib/constants";
 
-export function FixtureCard({ match }: { match: Match }) {
+export function FixtureCard({ match, priority = false }: { match: Match; priority?: boolean }) {
   const formatted = formatMatchDateFull(match.datetime);
 
-  const resultType = match.result?.includes("(G)")
-    ? "win"
-    : match.result?.includes("(P)")
-    ? "loss"
-    : match.result?.includes("(E)")
-    ? "draw"
-    : null;
-
-  const resultColor =
-    resultType === "win"
-      ? "text-success"
-      : resultType === "loss"
-      ? "text-error"
-      : resultType === "draw"
-      ? "text-warning"
-      : "text-primary";
+  const outcome = getResultOutcome(match.result);
+  const resultColor = outcome ? RESULT_OUTCOME_CLASS[outcome] : "text-primary";
 
   return (
-    <article className="bg-surface backdrop-blur-sm border border-border rounded-2xl overflow-hidden">
+    <article className="card overflow-hidden">
       <div className="grid grid-cols-3 items-center gap-2 p-4">
         <div className="flex flex-col items-center text-center gap-1">
           <Image
@@ -33,6 +19,7 @@ export function FixtureCard({ match }: { match: Match }) {
             alt="Deportivo Morón"
             width={48}
             height={48}
+            priority={priority}
             className="h-10 w-10 sm:h-12 sm:w-12"
           />
           <span className="text-[10px] font-medium text-muted leading-tight">Morón</span>
@@ -44,7 +31,7 @@ export function FixtureCard({ match }: { match: Match }) {
               {match.result.split(" ")[0]}
             </span>
           ) : (
-            <span className="inline-block px-2 py-0.5 bg-primary/10 text-primary-light rounded text-xs font-bold">
+            <span className="font-display inline-block px-2 py-0.5 bg-primary/10 text-primary-light rounded text-xs font-bold uppercase">
               VS
             </span>
           )}

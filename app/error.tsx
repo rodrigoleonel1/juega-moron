@@ -15,7 +15,7 @@ export default function Error({
 
   return (
     <section className="animate-fade-in flex flex-col items-center justify-center gap-4 py-16 text-center">
-      <div className="bg-surface backdrop-blur-sm border border-border rounded-2xl p-8 max-w-md">
+      <div className="card p-8 max-w-md">
         <h1 className="font-bold text-2xl mb-2">Algo salió mal</h1>
         <p className="text-muted text-sm mb-6">
           No se pudieron cargar los datos. Puede ser un problema de conexión o

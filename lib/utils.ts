@@ -1,4 +1,21 @@
 import { ARGENTINA_TIME_ZONE, parseArgentinaDateTime } from "@/lib/argentina-date";
+import type { MatchResult, Season } from "@/lib/types";
+
+export function isSeason(value: string): value is Season {
+  return value === "TEMP25" || value === "TEMP26";
+}
+
+export function getResultOutcome(result: string | undefined): MatchResult | null {
+  const outcome = result?.match(/\(([GEP])\)/)?.[1];
+
+  return outcome === "G" || outcome === "E" || outcome === "P" ? outcome : null;
+}
+
+export const RESULT_OUTCOME_CLASS: Record<MatchResult, string> = {
+  G: "text-success",
+  E: "text-warning",
+  P: "text-error",
+};
 
 export function formatMatchDate(datetime: string) {
   const date = parseArgentinaDateTime(datetime);

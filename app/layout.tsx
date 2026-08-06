@@ -9,12 +9,14 @@ const barlow = Barlow({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-barlow",
+  preload: false,
 });
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["600", "700"],
   variable: "--font-barlow-condensed",
+  preload: false,
 });
 
 const siteUrl = SITE_URL;
@@ -88,7 +90,6 @@ export default function RootLayout({
           name="google-site-verification"
           content="8WARsLdu7-U5Xn5naWCUDUFKgOMsEK3rl4eZGz5iskM"
         />
-        <link rel="canonical" href={siteUrl} />
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="icon" href="/favicon.ico" sizes="48x48" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -103,6 +104,32 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <ServiceWorkerRegister />
+        <a href="#main-content" className="skip-link">
+          Saltar al contenido principal
+        </a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Hoy juega Morón?",
+              url: siteUrl,
+              description:
+                "Enterate cuándo juega el Club Deportivo Morón. Próximo partido, resultados y fixture del Gallo.",
+              inLanguage: "es-AR",
+              publisher: {
+                "@type": "Organization",
+                name: "Hoy juega Morón?",
+                url: siteUrl,
+                logo: {
+                  "@type": "ImageObject",
+                  url: `${siteUrl}/android-chrome-192x192.png`,
+                },
+              },
+            }),
+          }}
+        />
         <div className="relative min-h-dvh">
           <div
             className="fixed inset-0 bg-[url(/bg.jpg)] bg-center bg-cover opacity-60 z-0"
@@ -110,7 +137,7 @@ export default function RootLayout({
           />
           <div className="fixed inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 z-[1]" aria-hidden="true" />
           <Header />
-          <main className="relative z-10 px-4 sm:px-6 lg:px-8 pt-20">
+          <main id="main-content" className="relative z-10 px-4 sm:px-6 lg:px-8 pt-20">
             {children}
           </main>
         </div>
