@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
 import { Jugador } from "@/lib/types";
-import { isValidWord, getDailyIndex } from "@/lib/wordle";
-import { getArgentinaDateKey } from "@/lib/argentina-date";
+import { isValidWord, getDailyIndex, getDailyWord, getJugador } from "@/lib/wordle";
+import { getArgentinaDate, getArgentinaDateKey } from "@/lib/argentina-date";
 import {
   loadStats,
   saveStats,
@@ -96,7 +96,9 @@ function getCellLabel(char: string, state: LetterState): string {
   return `${char}, ${STATE_LABEL[state]}`;
 }
 
-export function WordleGame({ target, jugador }: { target: string; jugador?: Jugador }) {
+export function WordleGame() {
+  const target = useMemo(() => getDailyWord(), []);
+  const jugador = useMemo(() => getJugador(target), [target]);
   const wordLength = target.length;
   const saved = useSyncExternalStore(
     subscribeToStorage,
@@ -219,6 +221,36 @@ export function WordleGame({ target, jugador }: { target: string; jugador?: Juga
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [addLetter, removeLetter, submitGuess, alreadyPlayed]);
+
+  useEffect(() => {
+    const mountedDateKey = getDateKey();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const scheduleMidnightReload = () => {
+      if (timer) clearTimeout(timer);
+      const now = Date.now();
+      const delay = getArgentinaDate().getTime() + 86_400_000 - now + 1000;
+      timer = setTimeout(() => window.location.reload(), Math.max(delay, 0));
+    };
+
+    const onVisible = () => {
+      if (getDateKey() !== mountedDateKey) {
+        window.location.reload();
+        return;
+      }
+      scheduleMidnightReload();
+    };
+
+    scheduleMidnightReload();
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
+    };
+  }, []);
 
   const keyboardRows = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
