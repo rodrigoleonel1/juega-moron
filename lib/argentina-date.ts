@@ -39,18 +39,20 @@ export function parseArgentinaDateTime(datetime: string): Date {
 }
 
 export function getArgentinaDate(): Date {
+  const now = new Date();
+  const offsetMs = getArgentinaOffsetMs(now);
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: TIME_ZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).formatToParts(new Date());
+  }).formatToParts(now);
 
   const year = parts.find((p) => p.type === "year")!.value;
   const month = parts.find((p) => p.type === "month")!.value;
   const day = parts.find((p) => p.type === "day")!.value;
 
-  return new Date(`${year}-${month}-${day}T00:00:00Z`);
+  return new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)) - offsetMs);
 }
 
 export function getArgentinaDateKey(): string {
