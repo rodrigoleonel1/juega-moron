@@ -23,6 +23,7 @@ interface Guess {
 interface SavedGame {
   target: string;
   won: boolean;
+  complete: boolean;
   guesses: Guess[];
   date: string;
 }
@@ -113,11 +114,11 @@ export function WordleGame() {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [stats, setStats] = useState<WordleStatsType>(loadStats);
 
-  const alreadyPlayed = saved !== null;
+  const alreadyPlayed = saved !== null && saved.complete !== false;
   const guesses = saved?.guesses ?? localGuesses;
   const gameOver = alreadyPlayed || localGameOver;
   const won = saved?.won ?? localWon;
-  const message = saved
+  const message = saved?.complete
     ? buildResultMessage(saved.won, jugador, target)
     : localMessage;
 
@@ -142,16 +143,19 @@ export function WordleGame() {
     return `Wordle Morón #${day} ${won ? guesses.length : "X"}/${MAX_ATTEMPTS}\n${rows}`;
   }, [gameOver, guesses, won]);
 
-  const saveGame = useCallback((guesses: Guess[], won: boolean) => {
+  const saveGame = useCallback((guesses: Guess[], won: boolean, complete: boolean) => {
     const g: SavedGame = {
       target,
       won,
+      complete,
       guesses,
       date: getDateKey(),
     };
     localStorage.setItem("wordle-moron", JSON.stringify(g));
 
     savedGameCache = { key: "", value: null };
+
+    if (!complete) return;
 
     const nextStats = recordResult(loadStats(), won, guesses.length, getDateKey());
     saveStats(nextStats);
@@ -196,14 +200,16 @@ export function WordleGame() {
       setLocalWon(true);
       setLocalGameOver(true);
       setLocalMessage(buildResultMessage(true, jugador, target));
-      saveGame(newGuesses, true);
+      saveGame(newGuesses, true, true);
       return;
     }
 
     if (newGuesses.length >= MAX_ATTEMPTS) {
       setLocalGameOver(true);
       setLocalMessage(buildResultMessage(false, jugador, target));
-      saveGame(newGuesses, false);
+      saveGame(newGuesses, false, true);
+    } else {
+      saveGame(newGuesses, false, false);
     }
   }, [gameOver, alreadyPlayed, currentGuess, target, guesses, wordLength, saveGame, jugador]);
 
