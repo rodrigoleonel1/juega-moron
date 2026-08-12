@@ -2,12 +2,17 @@
   "name": "juega-moron",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.18.0",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint .",
-    "test": "vitest run"
+    "preinstall": "node \"scripts/use-pnpm.cjs\"",
+    "dev": "node scripts/use-pnpm.cjs next dev --turbopack",
+    "build": "node scripts/use-pnpm.cjs next build",
+    "start": "node scripts/use-pnpm.cjs next start",
+    "lint": "node scripts/use-pnpm.cjs eslint .",
+    "test": "node scripts/use-pnpm.cjs vitest run"
   },
   "dependencies": {
     "lucide-react": "^1.27.0",

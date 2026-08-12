@@ -716,7 +716,7 @@ export const JUGADORES: Jugador[] = [
   { nombre: "Gonzalo", apellido: "SALEGA" },
   {
     nombre: "Julio",
-    apellido: "SALVÁ",
+    apellido: "SALVA",
     clubes: [
       {
         nombre: "Estudiantes (Caseros)",
