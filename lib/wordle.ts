@@ -6,6 +6,16 @@ export { JUGADORES };
 
 const APELLIDOS = JUGADORES.map((j) => j.apellido);
 
+export function normalizeWord(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, (mark) => (mark === "\u0303" ? mark : ""))
+    .normalize("NFC")
+    .toUpperCase();
+}
+
+const NORMALIZED_APELLIDOS = new Set(APELLIDOS.map(normalizeWord));
+
 const LENGTH_COUNT = JUGADORES.reduce<Record<number, number>>((acc, j) => {
   acc[j.apellido.length] = (acc[j.apellido.length] || 0) + 1;
   return acc;
@@ -26,11 +36,10 @@ export function getDailyWord(): string {
 }
 
 export function getJugador(apellido: string): Jugador | undefined {
-  return JUGADORES.find(
-    (j) => j.apellido === apellido
-  );
+  const normalized = normalizeWord(apellido);
+  return JUGADORES.find((j) => normalizeWord(j.apellido) === normalized);
 }
 
 export function isValidWord(word: string): boolean {
-  return APELLIDOS.includes(word.toUpperCase());
+  return NORMALIZED_APELLIDOS.has(normalizeWord(word));
 }

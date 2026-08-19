@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isValidWord, getDailyIndex } from "@/lib/wordle";
+import { isValidWord, getDailyIndex, normalizeWord } from "@/lib/wordle";
 import { EMPTY_STATS, recordResult, winPercentage } from "@/lib/wordle-stats";
 
 describe("isValidWord", () => {
@@ -9,6 +9,17 @@ describe("isValidWord", () => {
 
   it("rechaza una palabra que no es un apellido", () => {
     expect(isValidWord("ZZZZZ")).toBe(false);
+  });
+});
+
+describe("normalizeWord", () => {
+  it("quita los acentos de las vocales", () => {
+    expect(normalizeWord("dÍaz")).toBe("DIAZ");
+  });
+
+  it("preserva la Ñ", () => {
+    expect(normalizeWord("cañete")).toBe("CAÑETE");
+    expect(isValidWord("CANETE")).toBe(false);
   });
 });
 

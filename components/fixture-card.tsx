@@ -3,12 +3,27 @@ import { ExternalLink } from "lucide-react";
 import { formatMatchDateFull, getResultOutcome, RESULT_OUTCOME_CLASS } from "@/lib/utils";
 import { Match } from "@/lib/types";
 import { MORON_TEAM_ID } from "@/lib/constants";
+import { parseArgentinaDateTime } from "@/lib/argentina-date";
 
-export function FixtureCard({ match, priority = false }: { match: Match; priority?: boolean }) {
+const LIVE_WINDOW_MS = 2 * 60 * 60 * 1000;
+
+export function FixtureCard({
+  match,
+  priority = false,
+  live = false,
+}: {
+  match: Match;
+  priority?: boolean;
+  live?: boolean;
+}) {
   const formatted = formatMatchDateFull(match.datetime);
 
   const outcome = getResultOutcome(match.result);
   const resultColor = outcome ? RESULT_OUTCOME_CLASS[outcome] : "text-primary";
+
+  const now = new Date().getTime();
+  const matchDate = parseArgentinaDateTime(match.datetime).getTime();
+  const isPending = !match.result && !live && now > matchDate + LIVE_WINDOW_MS;
 
   return (
     <article className="card overflow-hidden">
@@ -29,6 +44,11 @@ export function FixtureCard({ match, priority = false }: { match: Match; priorit
           {match.result ? (
             <span className={`font-bold text-lg sm:text-xl ${resultColor}`}>
               {match.result.split(" ")[0]}
+            </span>
+          ) : live ? (
+            <span className="font-display inline-flex items-center gap-1 px-2 py-0.5 bg-red-500/15 text-red-400 border border-red-500/30 rounded text-xs font-bold uppercase">
+              <span aria-hidden="true" className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              En vivo
             </span>
           ) : (
             <span className="font-display inline-block px-2 py-0.5 bg-primary/10 text-primary-light rounded text-xs font-bold uppercase">
@@ -87,6 +107,14 @@ export function FixtureCard({ match, priority = false }: { match: Match; priorit
                 <ExternalLink size={10} aria-hidden="true" />
               </a>
             )}
+          </div>
+        ) : isPending ? (
+          <div className="rounded-lg bg-surface border border-border text-muted py-1.5 text-xs font-semibold text-center">
+            Resultado pendiente
+          </div>
+        ) : live ? (
+          <div className="rounded-lg bg-red-500/10 text-red-400 py-1.5 text-xs font-semibold text-center border border-red-500/30">
+            En juego
           </div>
         ) : (
           <div className="rounded-lg bg-primary/10 text-primary-light py-1.5 text-xs font-semibold text-center border border-primary/20">

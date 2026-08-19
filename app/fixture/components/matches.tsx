@@ -7,8 +7,18 @@ import { Match, Season } from "@/lib/types";
 import { parseArgentinaDateTime } from "@/lib/argentina-date";
 import { getResultOutcome } from "@/lib/utils";
 
-type MatchFilterStatus = "all" | "upcoming" | "played" | "won" | "lost" | "drawn";
+type MatchFilterStatus =
+  | "all"
+  | "upcoming"
+  | "played"
+  | "live"
+  | "pending"
+  | "won"
+  | "lost"
+  | "drawn";
 type MatchSortOrder = "asc" | "desc";
+
+const LIVE_WINDOW_MS = 2 * 60 * 60 * 1000;
 
 interface MatchesProps {
   matches: Match[];
@@ -23,10 +33,13 @@ export default function Matches({ matches }: MatchesProps) {
   const filteredAndSortedFixtures = matches
     .filter((match) => {
       const matchesSeason = match.temporada === season;
-      const matchDate = parseArgentinaDateTime(match.datetime);
-      const now = new Date();
+      const matchDate = parseArgentinaDateTime(match.datetime).getTime();
+      const now = new Date().getTime();
       const isPlayed = !!match.result;
       const isUpcoming = !isPlayed && matchDate > now;
+      const isLive =
+        !isPlayed && now >= matchDate && now <= matchDate + LIVE_WINDOW_MS;
+      const isPending = !isPlayed && now > matchDate + LIVE_WINDOW_MS;
       const matchesSearch = match.versus
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -36,6 +49,10 @@ export default function Matches({ matches }: MatchesProps) {
         matchesStatus = isPlayed;
       } else if (filterStatus === "upcoming") {
         matchesStatus = isUpcoming;
+      } else if (filterStatus === "live") {
+        matchesStatus = isLive;
+      } else if (filterStatus === "pending") {
+        matchesStatus = isPending;
       } else if (filterStatus === "won") {
         matchesStatus = outcome === "G";
       } else if (filterStatus === "lost") {
@@ -118,7 +135,9 @@ export default function Matches({ matches }: MatchesProps) {
           >
             <option value="all">Todos</option>
             <option value="upcoming">Próximos</option>
+            <option value="live">En vivo</option>
             <option value="played">Jugados</option>
+            <option value="pending">Resultado pendiente</option>
             <option value="won">Ganados</option>
             <option value="lost">Perdidos</option>
             <option value="drawn">Empatados</option>
@@ -141,11 +160,20 @@ export default function Matches({ matches }: MatchesProps) {
 
       {filteredAndSortedFixtures.length > 0 ? (
         <ul className="grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-          {filteredAndSortedFixtures.map((match: Match, index) => (
-            <li key={match.datetime}>
-              <FixtureCard match={match} priority={index === 0} />
-            </li>
-          ))}
+          {filteredAndSortedFixtures.map((match: Match, index) => {
+            const matchDate = parseArgentinaDateTime(match.datetime).getTime();
+            const now = new Date().getTime();
+            const isLive =
+              !match.result &&
+              now >= matchDate &&
+              now <= matchDate + LIVE_WINDOW_MS;
+
+            return (
+              <li key={match.datetime}>
+                <FixtureCard match={match} priority={index === 0} live={isLive} />
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <div className="card text-center py-12 px-6">

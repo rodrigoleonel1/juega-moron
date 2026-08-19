@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
 import { Jugador } from "@/lib/types";
-import { isValidWord, getDailyIndex, getDailyWord, getJugador } from "@/lib/wordle";
+import { isValidWord, getDailyIndex, getDailyWord, getJugador, normalizeWord } from "@/lib/wordle";
 import { getArgentinaDate, getArgentinaDateKey } from "@/lib/argentina-date";
 import {
   loadStats,
@@ -80,8 +80,10 @@ function getLetterState(
   target: string,
   index: number
 ): LetterState {
-  if (guess[index] === target[index]) return "correct";
-  if (target.includes(guess[index])) return "present";
+  const normalizedGuess = normalizeWord(guess);
+  const normalizedTarget = normalizeWord(target);
+  if (normalizedGuess[index] === normalizedTarget[index]) return "correct";
+  if (normalizedTarget.includes(normalizedGuess[index])) return "present";
   return "absent";
 }
 
@@ -195,7 +197,7 @@ export function WordleGame() {
     setCurrentGuess("");
     setValidationError(null);
 
-    const isWon = currentGuess === target;
+    const isWon = normalizeWord(currentGuess) === normalizeWord(target);
     if (isWon) {
       setLocalWon(true);
       setLocalGameOver(true);

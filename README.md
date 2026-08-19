@@ -79,6 +79,30 @@ Los partidos salen de una **Google Sheet pública** publicada como página web (
 
 > `SHEETS_BASE_URL`, `REVALIDATE_SECRET` y `NEXT_PUBLIC_SITE_URL` deben estar definidos en el entorno de producción (Vercel → Settings → Environment Variables).
 
+### Estado en vivo (opcional, automático)
+
+Además de la edición manual, el sitio muestra el estado del partido **en vivo** (próximamente / en vivo / finalizado) consultando **promiedos** (`lib/promiedos.ts`), el mismo proveedor de los escudos. No requiere API key:
+
+- `/api/match-status?competencia=...&id_prom=...` devuelve `{ match: { status, score, ... } }` desde el `__NEXT_DATA__` de la página de la liga.
+- La home hace polling de ese endpoint solo cerca del horario del partido (`hooks/use-match-status.ts`) y muestra marcador en vivo o "Finalizado — cargando resultado".
+- El resultado **final** se persiste en la Google Sheet (fuente de verdad definitiva); el estado en vivo es solo lectura de promiedos.
+
+**Mapa de competencias** (`lib/promiedos.ts`): cada competencia se mapea a su URL de liga de promiedos. Si agregás una competencia nueva en la hoja, sumá la entrada al mapa (y al Apps Script).
+
+#### Auto-carga del resultado con Apps Script (sin doPost)
+
+Para que el resultado se cargue solo a la hoja al terminar el partido (aunque nadie visite el sitio):
+
+1. En el proyecto de Apps Script asociado a la hoja, agregá una función `updateLiveResults()` que:
+   - lea la fila del partido sin resultado (usa su `competencia` e `id_prom`),
+   - consulte la página de liga de promiedos con `UrlFetchApp.fetch`,
+   - extraiga el `__NEXT_DATA__` y encuentre el partido de Morón (`id: "hbba"`),
+   - si el estado es `Finalizado` y la celda `result` está vacía, escriba `"X-Y (G/E/P)"` (X = Morón, Y = rival, `(G/E/P)` según el ganador),
+   - llame a `https://juegamoron.vercel.app/api/revalidate/matches?secret=...` para invalidar el caché.
+2. Configurá un **trigger** una sola vez: Apps Script → *Triggers* → *+ Agregar trigger* → `updateLiveResults` → *Time-driven* → cada 1 minuto. Después es 100% automático.
+
+> El `secret` de revalidación va en el código del Apps Script, no en el repo.
+
 ## Arquitectura
 
 ```
@@ -100,6 +124,7 @@ tests/         Tests de Vitest
 | `/juegos`                      | Índice de juegos                                        |
 | `/juegos/wordle`               | Wordle de apellidos de jugadores del club               |
 | `/api/revalidate/matches`      | Revalidación on-demand del caché (requiere `secret`)    |
+| `/api/match-status`            | Estado en vivo del partido desde promiedos (`?competencia=` y `?id_prom=`) |
 | `/rss.xml`                     | Feed RSS con los últimos partidos                       |
 | `/sitemap.xml`                 | Sitemap                                                 |
 | `/manifest.webmanifest`        | Manifest de la PWA                                      |

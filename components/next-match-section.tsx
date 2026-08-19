@@ -1,7 +1,6 @@
 import type { Match } from "@/lib/types";
 import Image from "next/image";
-import { NextMatch } from "@/components/next-match";
-import { CountdownDisplay } from "@/components/countdown-display";
+import { NextMatchLive } from "@/components/next-match-live";
 
 interface NextMatchSectionProps {
   nextMatch: Match | null;
@@ -27,17 +26,8 @@ function SeasonEndedState() {
   );
 }
 
-function MatchFoundState({ match }: { match: Match }) {
-  return (
-    <div className="space-y-4">
-      <CountdownDisplay match_date={match.datetime} />
-      <NextMatch match={match} />
-    </div>
-  );
-}
-
 export function NextMatchSection({ nextMatch }: NextMatchSectionProps) {
   if (!nextMatch?.versus) return <SeasonEndedState />;
 
-  return <MatchFoundState match={nextMatch} />;
+  return <NextMatchLive match={nextMatch} />;
 }

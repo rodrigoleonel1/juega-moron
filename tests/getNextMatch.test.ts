@@ -71,14 +71,35 @@ describe("getNextMatch", () => {
     expect(next.versus).toBe("Almagro");
   });
 
-  it("no considera un partido que ya terminó hace más de 2 horas", async () => {
+  it("mantiene un partido reciente sin resultado dentro de la ventana (evita falso 'Temporada finalizada')", async () => {
     mockGetMatches.mockResolvedValue([
-      match({ versus: "Almagro", datetime: "2026-08-08 04:00:00" }),
+      match({ versus: "Almagro", datetime: "2026-08-07 22:00:00" }),
+    ]);
+
+    const next = await getNextMatch();
+
+    expect(next.versus).toBe("Almagro");
+  });
+
+  it("no considera un partido sin resultado que terminó hace más de la ventana", async () => {
+    mockGetMatches.mockResolvedValue([
+      match({ versus: "Almagro", datetime: "2026-08-01 04:00:00" }),
     ]);
 
     const next = await getNextMatch();
 
     expect(next.versus).toBe("");
+  });
+
+  it("prioriza el partido futuro por encima de un reciente sin resultado", async () => {
+    mockGetMatches.mockResolvedValue([
+      match({ versus: "Almagro", datetime: "2026-08-07 22:00:00" }),
+      match({ versus: "Colegiales", datetime: "2026-08-20 20:00:00" }),
+    ]);
+
+    const next = await getNextMatch();
+
+    expect(next.versus).toBe("Colegiales");
   });
 
   it("devuelve EMPTY_MATCH si no hay próximos partidos", async () => {
