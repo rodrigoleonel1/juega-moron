@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { isNavigating } from "@/lib/navigation-guard";
 
 interface TimeLeft {
   days: number;
@@ -19,6 +20,8 @@ export function useCountdown(targetDate: Date): TimeLeft {
 
   useEffect(() => {
     const timer = setInterval(() => {
+      if (isNavigating()) return;
+
       const now = new Date().getTime();
       const matchStart = targetDate.getTime();
       const distance = matchStart - now;

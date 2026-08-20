@@ -87,6 +87,12 @@ Además de la edición manual, el sitio muestra el estado del partido **en vivo*
 - La home hace polling de ese endpoint solo cerca del horario del partido (`hooks/use-match-status.ts`) y muestra marcador en vivo o "Finalizado — cargando resultado".
 - El resultado **final** se persiste en la Google Sheet (fuente de verdad definitiva); el estado en vivo es solo lectura de promiedos.
 
+### Tabla de posiciones y resultados en vivo
+
+La página `/posiciones` muestra la tabla de la **Primera Nacional** (`tables_groups` del mismo `__NEXT_DATA__` de promiedos) con las zonas separadas, últimas 5 fechas por equipo y resultados en vivo. Los partidos en vivo se cruzan por **id de equipo** desde `games.filters` del mismo payload, sin llamadas extra: cada club muestra un badge con su marcador (verde si va ganando, rojo si va perdiendo, ámbar si empata).
+
+El refresco es adaptativo (`components/posiciones-live.tsx`): el primer render sale del server (`"use cache"`), y después un componente cliente hace `fetch` a `/api/posiciones` (JSON) sin peticiones RSC — con partidos en vivo o próximos dentro de 24 h cada 2 min; sin partidos cerca, agenda un único despertar 3 h antes del próximo inicio (`nextStartAt` de `extractMatchActivity`); y si promiedos aún no publica la próxima fecha, cae a un heartbeat de 1 h para descubrirla.
+
 **Mapa de competencias** (`lib/promiedos.ts`): cada competencia se mapea a su URL de liga de promiedos. Si agregás una competencia nueva en la hoja, sumá la entrada al mapa (y al Apps Script).
 
 #### Auto-carga del resultado con Apps Script (sin doPost)
@@ -121,6 +127,7 @@ tests/         Tests de Vitest
 | ------------------------------ | ------------------------------------------------------- |
 | `/`                            | Próximo partido + resultados recientes                  |
 | `/fixture`                     | Calendario completo por temporada                       |
+| `/posiciones`                  | Tabla de posiciones de la Primera Nacional con en vivo  |
 | `/juegos`                      | Índice de juegos                                        |
 | `/juegos/wordle`               | Wordle de apellidos de jugadores del club               |
 | `/api/revalidate/matches`      | Revalidación on-demand del caché (requiere `secret`)    |

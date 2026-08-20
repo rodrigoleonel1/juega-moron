@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { parseArgentinaDateTime } from "@/lib/argentina-date";
+import { isNavigating } from "@/lib/navigation-guard";
 import type { LiveMatch } from "@/lib/promiedos";
 import type { Match } from "@/lib/types";
 
@@ -59,6 +60,8 @@ export function useMatchStatus(match: Match | null): LiveMatch | null {
         const data = (await response.json()) as { match: LiveMatch | null };
 
         if (cancelled) return;
+
+        if (isNavigating()) return;
 
         setLiveMatchState(data.match ? { matchKey, match: data.match } : null);
 

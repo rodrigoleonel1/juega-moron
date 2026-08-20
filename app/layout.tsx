@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed } from "next/font/google";
 import { Header } from "@/components/header";
+import { NavigationGuard } from "@/components/navigation-guard";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
@@ -104,6 +105,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <ServiceWorkerRegister />
+        <NavigationGuard />
         <a href="#main-content" className="skip-link">
           Saltar al contenido principal
         </a>
