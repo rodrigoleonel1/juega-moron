@@ -50,14 +50,16 @@ function LiveBadge({
         ? "bg-warning/15 text-warning border-warning/30"
         : "bg-error/15 text-error border-error/30";
 
+  const displayScore = `${score}-${rivalScore}`;
+
   return (
     <span
       className={`ml-1.5 sm:ml-2 inline-flex items-center gap-1 rounded px-1 py-0.5 text-[10px] sm:text-xs font-bold tabular-nums border ${bgClass}`}
       role="status"
-      aria-label={`En vivo, ${outcome} ${score} a ${rivalScore}`}
+      aria-label={`En vivo, ${outcome} ${displayScore}`}
     >
       <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-      {score}
+      {displayScore}
     </span>
   );
 }

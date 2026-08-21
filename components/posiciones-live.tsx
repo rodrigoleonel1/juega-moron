@@ -7,7 +7,7 @@ import type {
 } from "@/lib/promiedos";
 import { StandingsTable } from "@/app/posiciones/components/standings-table";
 
-const POLL_INTERVAL_MS = 2 * 60 * 1000;
+const POLL_INTERVAL_MS = 60 * 1000;
 const MATCH_WINDOW_MS = 24 * 60 * 60 * 1000;
 const WAKE_LEAD_MS = 3 * 60 * 60 * 1000;
 const SLOW_HEARTBEAT_MS = 60 * 60 * 1000;
@@ -35,7 +35,7 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
 
   const refresh = useCallback(async () => {
     try {
-      const response = await fetch("/api/posiciones");
+      const response = await fetch("/api/posiciones", { cache: "no-store" });
       if (response.ok) {
         const data = (await response.json()) as StandingsPayload;
         setPayload(data);

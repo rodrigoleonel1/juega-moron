@@ -9,9 +9,11 @@ export async function GET() {
   if (!result) {
     return Response.json(
       { standings: null, liveByTeam: {}, activity: { hasLive: false, nextStartAt: null } },
-      { status: 503 },
+      { status: 503, headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } },
     );
   }
 
-  return Response.json(serializeStandingsPayload(result));
+  return Response.json(serializeStandingsPayload(result), {
+    headers: { "Cache-Control": "no-store, no-cache, must-revalidate" },
+  });
 }
