@@ -81,17 +81,17 @@ describe("getNextMatch", () => {
     expect(next.versus).toBe("Almagro");
   });
 
-  it("no considera un partido sin resultado que terminó hace más de la ventana", async () => {
+  it("devuelve partido pasado sin resultado aunque haya pasado mucho tiempo (hasta que Sheet tenga resultado)", async () => {
     mockGetMatches.mockResolvedValue([
       match({ versus: "Almagro", datetime: "2026-08-01 04:00:00" }),
     ]);
 
     const next = await getNextMatch();
 
-    expect(next.versus).toBe("");
+    expect(next.versus).toBe("Almagro");
   });
 
-  it("prioriza el partido futuro por encima de un reciente sin resultado", async () => {
+  it("devuelve el partido cronológicamente primero sin resultado (pasado antes que futuro)", async () => {
     mockGetMatches.mockResolvedValue([
       match({ versus: "Almagro", datetime: "2026-08-07 22:00:00" }),
       match({ versus: "Colegiales", datetime: "2026-08-20 20:00:00" }),
@@ -99,7 +99,7 @@ describe("getNextMatch", () => {
 
     const next = await getNextMatch();
 
-    expect(next.versus).toBe("Colegiales");
+    expect(next.versus).toBe("Almagro");
   });
 
   it("devuelve EMPTY_MATCH si no hay próximos partidos", async () => {

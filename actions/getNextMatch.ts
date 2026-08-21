@@ -3,10 +3,6 @@ import { parseArgentinaDateTime } from "@/lib/argentina-date";
 import { EMPTY_MATCH } from "@/lib/constants";
 import { getMatches } from "./getMatches";
 
-// Ventana durante la cual un partido sin resultado sigue considerándose "actual"
-// (cubre en vivo + resultado pendiente hasta que la sheet se actualice).
-const MATCH_CURRENT_WINDOW_MS = 24 * 60 * 60 * 1000;
-
 export const getNextMatch = async (): Promise<Match> => {
   let data: Match[];
 
@@ -17,27 +13,20 @@ export const getNextMatch = async (): Promise<Match> => {
     return EMPTY_MATCH;
   }
 
-  const now = new Date();
+  const now = Date.now();
 
-  const currentMatches = data
-    .map((match) => ({ match, matchTime: parseArgentinaDateTime(match.datetime) }))
-    .filter(({ match, matchTime }) => {
-      return (
-        !match.result &&
-        now.getTime() - matchTime.getTime() < MATCH_CURRENT_WINDOW_MS
-      );
-    })
-    .sort((a, b) => {
-      const aIsPast = a.matchTime.getTime() < now.getTime();
-      const bIsPast = b.matchTime.getTime() < now.getTime();
+  const sorted = data
+    .map((match) => ({
+      match,
+      matchTime: parseArgentinaDateTime(match.datetime).getTime(),
+    }))
+    .sort((a, b) => a.matchTime - b.matchTime);
 
-      // Priorizamos futuros por encima de recientes sin resultado
-      if (aIsPast !== bIsPast) return aIsPast ? 1 : -1;
+  for (const { match } of sorted) {
+    if (!match.result) {
+      return match;
+    }
+  }
 
-      return a.matchTime.getTime() - b.matchTime.getTime();
-    });
-
-  return currentMatches.length > 0
-    ? currentMatches[0].match
-    : EMPTY_MATCH;
+  return EMPTY_MATCH;
 };
