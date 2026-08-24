@@ -91,7 +91,7 @@ Además de la edición manual, el sitio muestra el estado del partido **en vivo*
 
 La página `/posiciones` muestra la tabla de la **Primera Nacional** (`tables_groups` del mismo `__NEXT_DATA__` de promiedos) con las zonas separadas, últimas 5 fechas por equipo y resultados en vivo. Los partidos en vivo se cruzan por **id de equipo** desde `games.filters` del mismo payload, sin llamadas extra: cada club muestra un badge con su marcador (verde si va ganando, rojo si va perdiendo, ámbar si empata).
 
-El refresco es adaptativo (`components/posiciones-live.tsx`): el primer render sale del server (`"use cache"`), y después un componente cliente hace `fetch` a `/api/posiciones` (JSON) sin peticiones RSC — con partidos en vivo o próximos dentro de 24 h cada 2 min; sin partidos cerca, agenda un único despertar 3 h antes del próximo inicio (`nextStartAt` de `extractMatchActivity`); y si promiedos aún no publica la próxima fecha, cae a un heartbeat de 1 h para descubrirla.
+El refresco es adaptativo (`components/posiciones-live.tsx`): el primer render sale del server (`"use cache"`), y después un componente cliente hace `fetch` a `/api/posiciones` (JSON) sin peticiones RSC. El cliente refresca al montar y al volver a la pestaña (throttle de 1 min); con partidos en vivo o próximos dentro de 24 h consulta cada 1 min; sin partidos cerca, cae a un heartbeat de 1 h como máximo (el despertar 3 h antes del próximo inicio, `nextStartAt` de `extractMatchActivity`, queda acotado a ese heartbeat). Además, el caché del server se puede invalidar on-demand con `/api/revalidate/standings?secret=...`.
 
 **Mapa de competencias** (`lib/promiedos.ts`): cada competencia se mapea a su URL de liga de promiedos. Si agregás una competencia nueva en la hoja, sumá la entrada al mapa (y al Apps Script).
 
@@ -104,7 +104,8 @@ Para que el resultado se cargue solo a la hoja al terminar el partido (aunque na
    - consulte la página de liga de promiedos con `UrlFetchApp.fetch`,
    - extraiga el `__NEXT_DATA__` y encuentre el partido de Morón (`id: "hbba"`),
    - si el estado es `Finalizado` y la celda `result` está vacía, escriba `"X-Y (G/E/P)"` (X = Morón, Y = rival, `(G/E/P)` según el ganador),
-   - llame a `https://juegamoron.vercel.app/api/revalidate/matches?secret=...` para invalidar el caché.
+    - llame a `https://juegamoron.vercel.app/api/revalidate/matches?secret=...` para invalidar el caché,
+    - llame también a `https://juegamoron.vercel.app/api/revalidate/standings?secret=...` para refrescar la tabla de posiciones.
 2. Configurá un **trigger** una sola vez: Apps Script → *Triggers* → *+ Agregar trigger* → `updateLiveResults` → *Time-driven* → cada 1 minuto. Después es 100% automático.
 
 > El `secret` de revalidación va en el código del Apps Script, no en el repo.
@@ -131,6 +132,7 @@ tests/         Tests de Vitest
 | `/juegos`                      | Índice de juegos                                        |
 | `/juegos/wordle`               | Wordle de apellidos de jugadores del club               |
 | `/api/revalidate/matches`      | Revalidación on-demand del caché (requiere `secret`)    |
+| `/api/revalidate/standings`    | Revalidación on-demand de la tabla de posiciones (requiere `secret`) |
 | `/api/match-status`            | Estado en vivo del partido desde promiedos (`?competencia=` y `?id_prom=`) |
 | `/rss.xml`                     | Feed RSS con los últimos partidos                       |
 | `/sitemap.xml`                 | Sitemap                                                 |

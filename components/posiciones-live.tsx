@@ -11,6 +11,7 @@ const POLL_INTERVAL_MS = 60 * 1000;
 const MATCH_WINDOW_MS = 24 * 60 * 60 * 1000;
 const WAKE_LEAD_MS = 3 * 60 * 60 * 1000;
 const SLOW_HEARTBEAT_MS = 60 * 60 * 1000;
+const FOCUS_REFRESH_THROTTLE_MS = 60 * 1000;
 
 function nextSchedule(activity: MatchActivity, now: number) {
   const shouldPoll =
@@ -32,8 +33,10 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
   const [payload, setPayload] = useState<StandingsPayload | null>(initial);
   const [tick, setTick] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastRefreshAtRef = useRef(0);
 
   const refresh = useCallback(async () => {
+    lastRefreshAtRef.current = Date.now();
     try {
       const response = await fetch("/api/posiciones", { cache: "no-store" });
       if (response.ok) {
@@ -48,6 +51,32 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
   }, []);
 
   useEffect(() => {
+    const id = setTimeout(refresh, 0);
+    return () => clearTimeout(id);
+  }, [refresh]);
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState !== "visible") return;
+      if (
+        Date.now() - lastRefreshAtRef.current <
+        FOCUS_REFRESH_THROTTLE_MS
+      ) {
+        return;
+      }
+      refresh();
+    };
+
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
+    };
+  }, [refresh]);
+
+  useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
 
     let delay = SLOW_HEARTBEAT_MS;
@@ -57,7 +86,10 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
       if (shouldPoll) {
         delay = POLL_INTERVAL_MS;
       } else if (nextWakeAt !== null) {
-        delay = Math.max(nextWakeAt - Date.now(), 0);
+        delay = Math.min(
+          Math.max(nextWakeAt - Date.now(), 0),
+          SLOW_HEARTBEAT_MS,
+        );
       }
     }
 
