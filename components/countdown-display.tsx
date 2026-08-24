@@ -14,7 +14,11 @@ export function CountdownDisplay({
   status,
 }: CountdownDisplayProps) {
   const matchStart = parseArgentinaDateTime(match_date);
-  const countdown = useCountdown(matchStart);
+  const countdown = useCountdown(matchStart, () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("match-countdown-finished"));
+    }
+  });
 
   const hasStarted = new Date().getTime() >= matchStart.getTime();
 

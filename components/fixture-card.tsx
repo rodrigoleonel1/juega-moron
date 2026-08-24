@@ -2,10 +2,8 @@ import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { formatMatchDateFull, getResultOutcome, RESULT_OUTCOME_CLASS } from "@/lib/utils";
 import { Match } from "@/lib/types";
-import { MORON_TEAM_ID } from "@/lib/constants";
+import { LIVE_WINDOW_MS, MORON_TEAM_ID } from "@/lib/constants";
 import { parseArgentinaDateTime } from "@/lib/argentina-date";
-
-const LIVE_WINDOW_MS = 2 * 60 * 60 * 1000;
 
 export function FixtureCard({
   match,

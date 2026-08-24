@@ -13,8 +13,6 @@ export const getNextMatch = async (): Promise<Match> => {
     return EMPTY_MATCH;
   }
 
-  const now = Date.now();
-
   const sorted = data
     .map((match) => ({
       match,

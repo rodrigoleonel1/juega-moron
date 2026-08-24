@@ -19,7 +19,8 @@ export function LiveScoreCard({
   finished = false,
 }: LiveScoreCardProps) {
   const formattedDate = formatMatchDate(match.datetime);
-  const score = live.score ?? [0, 0];
+  const hasScore = live.score !== null;
+  const score = live.score;
 
   return (
     <section
@@ -95,8 +96,17 @@ export function LiveScoreCard({
 
         <div className="px-4 py-3">
           <p className="text-center font-display text-4xl sm:text-5xl font-bold tabular-nums text-primary">
-            {score[0]} <span className="text-muted">—</span> {score[1]}
+            {hasScore ? (
+              <>
+                {score![0]} <span className="text-muted">—</span> {score![1]}
+              </>
+            ) : (
+              <span className="text-muted">—</span>
+            )}
           </p>
+          {!hasScore && !finished && (
+            <p className="text-center text-xs text-muted mt-1">Resultado no disponible</p>
+          )}
           <div className="flex items-center justify-center gap-2 text-sm text-muted flex-wrap mt-2">
             <span className="inline-flex items-center gap-0.5">
               <Calendar size={14} aria-hidden="true" />

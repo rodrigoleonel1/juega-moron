@@ -2,6 +2,8 @@ import { Jugador, Match } from "./types";
 
 export const MORON_TEAM_ID = "hbba";
 
+export const LIVE_WINDOW_MS = 3 * 60 * 60 * 1000;
+
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://juegamoron.vercel.app";
 

@@ -5,6 +5,7 @@ import { Search, ArrowDown, ArrowUp } from "lucide-react";
 import { FixtureCard } from "@/components/fixture-card";
 import { Match, Season } from "@/lib/types";
 import { parseArgentinaDateTime } from "@/lib/argentina-date";
+import { LIVE_WINDOW_MS } from "@/lib/constants";
 import { getResultOutcome } from "@/lib/utils";
 
 type MatchFilterStatus =
@@ -17,8 +18,6 @@ type MatchFilterStatus =
   | "lost"
   | "drawn";
 type MatchSortOrder = "asc" | "desc";
-
-const LIVE_WINDOW_MS = 2 * 60 * 60 * 1000;
 
 interface MatchesProps {
   matches: Match[];
