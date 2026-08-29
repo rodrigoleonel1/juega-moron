@@ -9,11 +9,11 @@ const COMPETENCIA = "Primera Nacional";
 export const metadata: Metadata = {
   title: "Posiciones",
   description:
-    "Tabla de posiciones de la Primera Nacional con resultados en vivo. Seguí a Deportivo Morón y todos los equipos de la temporada 2026.",
+    "Tabla de posiciones de la Primera Nacional. Seguí a Deportivo Morón y todos los equipos de la temporada 2026.",
   openGraph: {
     title: "Posiciones · Primera Nacional 2026",
     description:
-      "Tabla de posiciones de la Primera Nacional con resultados en vivo. Seguí a Deportivo Morón y todos los equipos de la temporada 2026.",
+      "Tabla de posiciones de la Primera Nacional. Seguí a Deportivo Morón y todos los equipos de la temporada 2026.",
     url: `${SITE_URL}/posiciones`,
     siteName: "Hoy juega Morón?",
     images: [

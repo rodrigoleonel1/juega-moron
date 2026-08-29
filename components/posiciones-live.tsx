@@ -1,28 +1,64 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type {
-  MatchActivity,
-  StandingsPayload,
-} from "@/lib/promiedos";
+import type { StandingsPayload } from "@/lib/promiedos";
 import { StandingsTable } from "@/app/posiciones/components/standings-table";
 
-const POLL_INTERVAL_MS = 60 * 1000;
-const MATCH_WINDOW_MS = 24 * 60 * 60 * 1000;
-const WAKE_LEAD_MS = 3 * 60 * 60 * 1000;
-const SLOW_HEARTBEAT_MS = 60 * 60 * 1000;
+const POLL_INTERVAL_MS = 60 * 60 * 1000;
 const FOCUS_REFRESH_THROTTLE_MS = 60 * 1000;
+const ARG_TZ = "America/Argentina/Buenos_Aires";
+const WINDOW_DAYS = new Set([5, 6, 0, 1]); // Vie, Sáb, Dom, Lun
+const WINDOW_START_HOUR = 13;
+const WINDOW_END_HOUR = 24; // 13:00 inclusive — 24:00 exclusive (13-23)
 
-function nextSchedule(activity: MatchActivity, now: number) {
-  const shouldPoll =
-    activity.hasLive ||
-    (activity.nextStartAt !== null &&
-      activity.nextStartAt <= now + MATCH_WINDOW_MS);
-  const nextWakeAt =
-    shouldPoll || activity.nextStartAt === null
-      ? null
-      : activity.nextStartAt - WAKE_LEAD_MS;
-  return { shouldPoll, nextWakeAt };
+function getArgParts(date: Date): { day: number; hour: number } {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: ARG_TZ,
+    weekday: "short",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
+  }).formatToParts(date);
+
+  const weekdayStr = parts.find((p) => p.type === "weekday")?.value ?? "Sun";
+  const hourStr = parts.find((p) => p.type === "hour")?.value ?? "0";
+
+  const weekdayMap: Record<string, number> = {
+    Sun: 0,
+    Mon: 1,
+    Tue: 2,
+    Wed: 3,
+    Thu: 4,
+    Fri: 5,
+    Sat: 6,
+  };
+
+  return {
+    day: weekdayMap[weekdayStr] ?? 0,
+    hour: parseInt(hourStr, 10),
+  };
+}
+
+function isInWindow(date: Date = new Date()): boolean {
+  const { day, hour } = getArgParts(date);
+  return WINDOW_DAYS.has(day) && hour >= WINDOW_START_HOUR && hour < WINDOW_END_HOUR;
+}
+
+function msUntilNextWindow(now: Date): number {
+  // Buscar el próximo minuto que cae dentro de la ventana, hasta 8 días adelante.
+  // Paso de 1 minuto para mantener el cálculo simple y correcto con DST (ARG no tiene DST).
+  const maxOffset = 8 * 24 * 60 * 60 * 1000;
+  for (let offset = 60 * 1000; offset <= maxOffset; offset += 60 * 1000) {
+    const candidate = new Date(now.getTime() + offset);
+    if (isInWindow(candidate)) return offset;
+  }
+  return POLL_INTERVAL_MS;
+}
+
+function getNextDelay(): number {
+  const now = new Date();
+  if (isInWindow(now)) return POLL_INTERVAL_MS;
+  return msUntilNextWindow(now);
 }
 
 interface PosicionesLiveProps {
@@ -36,6 +72,11 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
   const lastRefreshAtRef = useRef(0);
 
   const refresh = useCallback(async () => {
+    // Solo refrescar si estamos dentro de la ventana horaria
+    if (!isInWindow(new Date())) {
+      setTick((current) => current + 1);
+      return;
+    }
     lastRefreshAtRef.current = Date.now();
     try {
       const response = await fetch("/api/posiciones", { cache: "no-store" });
@@ -58,12 +99,10 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
   useEffect(() => {
     const onVisible = () => {
       if (document.visibilityState !== "visible") return;
-      if (
-        Date.now() - lastRefreshAtRef.current <
-        FOCUS_REFRESH_THROTTLE_MS
-      ) {
+      if (Date.now() - lastRefreshAtRef.current < FOCUS_REFRESH_THROTTLE_MS) {
         return;
       }
+      if (!isInWindow(new Date())) return;
       refresh();
     };
 
@@ -79,19 +118,7 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
 
-    let delay = SLOW_HEARTBEAT_MS;
-
-    if (payload?.activity) {
-      const { shouldPoll, nextWakeAt } = nextSchedule(payload.activity, Date.now());
-      if (shouldPoll) {
-        delay = POLL_INTERVAL_MS;
-      } else if (nextWakeAt !== null) {
-        delay = Math.min(
-          Math.max(nextWakeAt - Date.now(), 0),
-          SLOW_HEARTBEAT_MS,
-        );
-      }
-    }
+    const delay = getNextDelay();
 
     timerRef.current = setTimeout(() => {
       refresh();
@@ -100,7 +127,7 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [payload, tick, refresh]);
+  }, [tick, refresh]);
 
   if (!payload || !payload.standings) {
     return (
@@ -127,7 +154,5 @@ export function PosicionesLive({ initial }: PosicionesLiveProps) {
     );
   }
 
-  return (
-    <StandingsTable standings={payload.standings} liveByTeam={payload.liveByTeam} />
-  );
+  return <StandingsTable standings={payload.standings} />;
 }

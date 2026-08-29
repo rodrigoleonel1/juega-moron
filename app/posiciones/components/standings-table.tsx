@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import type {
-  LiveByTeamRecord,
   Standings,
   StandingsRow,
   StandingsTrendValue,
@@ -10,7 +9,6 @@ import type {
 
 interface StandingsTableProps {
   standings: Standings;
-  liveByTeam: LiveByTeamRecord;
 }
 
 const TREND_CLASS: Record<StandingsTrendValue, string> = {
@@ -35,38 +33,9 @@ function TrendDot({ value }: { value: StandingsTrendValue }) {
   );
 }
 
-function LiveBadge({
-  score,
-  rivalScore,
-}: {
-  score: number;
-  rivalScore: number;
-}) {
-  const outcome = score > rivalScore ? "ganando" : score === rivalScore ? "empatando" : "perdiendo";
-  const bgClass =
-    score > rivalScore
-      ? "bg-success/15 text-success border-success/30"
-      : score === rivalScore
-        ? "bg-warning/15 text-warning border-warning/30"
-        : "bg-error/15 text-error border-error/30";
-
-  const displayScore = `${score}-${rivalScore}`;
-
-  return (
-    <span
-      className={`ml-1.5 sm:ml-2 inline-flex items-center gap-1 rounded px-1 py-0.5 text-[10px] sm:text-xs font-bold tabular-nums border ${bgClass}`}
-      role="status"
-      aria-label={`En vivo, ${outcome} ${displayScore}`}
-    >
-      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-      {displayScore}
-    </span>
-  );
-}
-
 const cell = "px-1 sm:px-2 py-2 sm:py-2.5 text-center tabular-nums whitespace-nowrap";
 
-export function StandingsTable({ standings, liveByTeam }: StandingsTableProps) {
+export function StandingsTable({ standings }: StandingsTableProps) {
   return (
     <section className="animate-fade-in mx-auto max-w-7xl mb-12">
       <h1 className="font-display font-bold text-4xl sm:text-5xl uppercase tracking-tight mb-6">
@@ -102,8 +71,6 @@ export function StandingsTable({ standings, liveByTeam }: StandingsTableProps) {
                 </thead>
                 <tbody>
                   {zone.rows.map((row: StandingsRow) => {
-                    const live = liveByTeam[row.teamId];
-
                     return (
                       <tr
                         key={row.teamId}
@@ -139,12 +106,6 @@ export function StandingsTable({ standings, liveByTeam }: StandingsTableProps) {
                               className="h-5 w-5 sm:h-6 sm:w-6 shrink-0"
                             />
                             <span className="truncate">{row.name}</span>
-                            {live && (
-                              <LiveBadge
-                                score={live.score}
-                                rivalScore={live.rivalScore}
-                              />
-                            )}
                           </span>
                         </td>
                         <td className={`${cell} font-bold`}>{row.points}</td>
