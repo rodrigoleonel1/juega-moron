@@ -2,6 +2,7 @@
 
 import { useCountdown } from "@/hooks/use-countdown";
 import { parseArgentinaDateTime } from "@/lib/argentina-date";
+import { LIVE_WINDOW_MS } from "@/lib/constants";
 import type { MatchLiveStatus } from "@/lib/promiedos";
 
 interface CountdownDisplayProps {
@@ -20,7 +21,11 @@ export function CountdownDisplay({
     }
   });
 
-  const hasStarted = new Date().getTime() >= matchStart.getTime();
+  const now = Date.now();
+  const hasStarted = now >= matchStart.getTime();
+  const isLiveWindow = hasStarted && now <= matchStart.getTime() + LIVE_WINDOW_MS;
+  // Solo "En vivo" si estamos en ventana 3h o promiedos confirmó status
+  const showLive = status === "en vivo" || (hasStarted && isLiveWindow && status !== "finalizado");
 
   const countdownItems = [
     { value: countdown.days.toString().padStart(2, "0"), label: "Días" },
@@ -37,7 +42,7 @@ export function CountdownDisplay({
             {status === "finalizado" ? "Partido finalizado" : "Próximo partido en"}
           </h2>
 
-          {hasStarted ? (
+          {showLive || status === "finalizado" ? (
             <p className="text-center font-display text-2xl sm:text-3xl font-bold uppercase tracking-widest text-red-400">
               <span
                 aria-hidden="true"
@@ -48,6 +53,10 @@ export function CountdownDisplay({
                 }`}
               />
               {status === "finalizado" ? "Finalizado" : "En vivo"}
+            </p>
+          ) : hasStarted ? (
+            <p className="text-center font-display text-lg sm:text-xl font-semibold text-muted">
+              Esperando resultado
             </p>
           ) : (
             <div className="grid grid-cols-4 gap-2 sm:gap-4">

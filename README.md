@@ -106,7 +106,7 @@ Para que el resultado se cargue solo a la hoja al terminar el partido (aunque na
    - si el estado es `Finalizado` y la celda `result` está vacía, escriba `"X-Y (G/E/P)"` (X = Morón, Y = rival, `(G/E/P)` según el ganador),
     - llame a `https://juegamoron.vercel.app/api/revalidate/matches?secret=...` para invalidar el caché,
     - llame también a `https://juegamoron.vercel.app/api/revalidate/standings?secret=...` para refrescar la tabla de posiciones.
-2. Configurá un **trigger** una sola vez: Apps Script → *Triggers* → *+ Agregar trigger* → `updateLiveResults` → *Time-driven* → cada 1 minuto. Después es 100% automático.
+2. Configurá un **trigger** una sola vez: Apps Script → *Triggers* → *+ Agregar trigger* → `updateLiveResults` → *Time-driven* → cada 10 minutos. El script usa `LockService` anti-solapamiento y solo llama a promiedos si hay un partido empezado (0 fetches la mayoría del tiempo; máximo 1 fetch por competencia cada 10 min en ventana de 3h; stales >3h se rescatan 1 vez cada 12h). Después es 100% automático.
 
 > El `secret` de revalidación va en el código del Apps Script, no en el repo.
 

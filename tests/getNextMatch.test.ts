@@ -71,7 +71,7 @@ describe("getNextMatch", () => {
     expect(next.versus).toBe("Almagro");
   });
 
-  it("mantiene un partido reciente sin resultado dentro de la ventana (evita falso 'Temporada finalizada')", async () => {
+  it("mantiene un partido reciente sin resultado dentro de la ventana 24h (evita falso 'Temporada finalizada')", async () => {
     mockGetMatches.mockResolvedValue([
       match({ versus: "Almagro", datetime: "2026-08-07 22:00:00" }),
     ]);
@@ -81,17 +81,17 @@ describe("getNextMatch", () => {
     expect(next.versus).toBe("Almagro");
   });
 
-  it("devuelve partido pasado sin resultado aunque haya pasado mucho tiempo (hasta que Sheet tenga resultado)", async () => {
+  it("descarta partido pasado sin resultado fuera de grace 24h (evita stale de hace días como Racing CBA)", async () => {
     mockGetMatches.mockResolvedValue([
       match({ versus: "Almagro", datetime: "2026-08-01 04:00:00" }),
     ]);
 
     const next = await getNextMatch();
 
-    expect(next.versus).toBe("Almagro");
+    expect(next).toEqual(EMPTY_MATCH);
   });
 
-  it("devuelve el partido cronológicamente primero sin resultado (pasado antes que futuro)", async () => {
+  it("prefiere futuro sobre pasado dentro de grace al elegir el próximo", async () => {
     mockGetMatches.mockResolvedValue([
       match({ versus: "Almagro", datetime: "2026-08-07 22:00:00" }),
       match({ versus: "Colegiales", datetime: "2026-08-20 20:00:00" }),
@@ -99,7 +99,18 @@ describe("getNextMatch", () => {
 
     const next = await getNextMatch();
 
-    expect(next.versus).toBe("Almagro");
+    expect(next.versus).toBe("Colegiales");
+  });
+
+  it("descarta stale y elige futuro cuando el pasado venció grace", async () => {
+    mockGetMatches.mockResolvedValue([
+      match({ versus: "Almagro", datetime: "2026-08-01 04:00:00" }),
+      match({ versus: "Colegiales", datetime: "2026-08-20 20:00:00" }),
+    ]);
+
+    const next = await getNextMatch();
+
+    expect(next.versus).toBe("Colegiales");
   });
 
   it("devuelve EMPTY_MATCH si no hay próximos partidos", async () => {
