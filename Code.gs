@@ -99,8 +99,15 @@ function shouldCheckOverdue(pendingOverdue) {
   return true;
 }
 
+function formatSheetDateTime(value) {
+  if (value instanceof Date && !isNaN(value.getTime())) {
+    return Utilities.formatDate(value, TZ, "yyyy-MM-dd HH:mm:ss");
+  }
+  return String(value || "").trim();
+}
 function parseSheetDateTime(datetime) {
-  const m = String(datetime || "").match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
+  const str = formatSheetDateTime(datetime);
+  const m = str.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
   if (!m) return null;
   // Proyecto debe estar en TZ = America/Argentina/Buenos_Aires (GMT-03:00) para que new Date() interprete bien
   return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]), 0);
@@ -118,19 +125,29 @@ function processSheet(sheet) {
   const resultCol = col("result");
   const competenciaCol = col("competencia");
 
-  if (!versusCol || !resultCol || !datetimeCol) return false;
+  if (!versusCol || !resultCol || !datetimeCol) {
+    console.log("Falta columna versus/result/datetime");
+    return false;
+  }
+  console.log("Header: " + header.join(" | ") + " -> versus=" + versusCol + " datetime=" + datetimeCol + " result=" + resultCol);
 
   const duePending = [];
   const overduePending = [];
+  let skippedDate = 0;
   for (let i = 1; i < values.length; i++) {
     const row = values[i];
     const versus = String(row[versusCol - 1] ?? "").trim();
     const result = String(row[resultCol - 1] ?? "").trim();
     if (versus && result === "") {
-      const datetime = String(row[datetimeCol - 1] ?? "").trim();
+      const datetimeRaw = row[datetimeCol - 1];
+      const datetime = formatSheetDateTime(datetimeRaw);
       // 0 fetches si el partido aún no empezó (futuro) -> no consultar promiedos
-      const kickoff = parseSheetDateTime(datetime);
-      if (!kickoff) continue;
+      const kickoff = parseSheetDateTime(datetimeRaw);
+      if (!kickoff) {
+        skippedDate++;
+        console.log("Fila " + (i+1) + " (" + versus + ") datetime no parseable: '" + datetime + "' raw=" + datetimeRaw);
+        continue;
+      }
       if (kickoff.getTime() > Date.now()) continue; // aún no empezó, no gastar fetch
       if (isDue(datetime)) {
         duePending.push({
@@ -152,8 +169,13 @@ function processSheet(sheet) {
     }
   }
 
+  if (skippedDate > 0) console.log("Filas con datetime no parseable: " + skippedDate);
   // Early exit 0 fetches: sin pendientes en ventana útil no llamar a promiedos
-  if (duePending.length === 0 && overduePending.length === 0) return false;
+  if (duePending.length === 0 && overduePending.length === 0) {
+    console.log("Sin pendientes en ventana 90-180 ni overdue, total filas vacias=" + (duePending.length + overduePending.length));
+    return false;
+  }
+  console.log("Pendientes due=" + duePending.length + " overdue=" + overduePending.length);
 
   // Throttle overdue: 90-180min cada 10min (due), >180min cada 1h (overdue reciente) / 12h (viejo)
   let pending = duePending;
