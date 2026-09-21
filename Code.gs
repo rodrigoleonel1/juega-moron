@@ -1,6 +1,10 @@
 const MORON_TEAM_ID = "hbba";
-const AFTER_KICKOFF_MS = 3 * 60 * 60 * 1000;
-const OVERDUE_THROTTLE_MS = 12 * 60 * 60 * 1000; // 12h - mínimo llamadas a promiedos para rescatar stales de días anteriores
+const RESULT_START_MS = 90 * 60 * 1000; // 90min - no buscar antes, partido en juego
+const RESULT_WINDOW_MS = 90 * 60 * 1000; // 90-180min - ventana útil donde Promiedos pone Final (ficha)
+const AFTER_KICKOFF_MS = RESULT_START_MS + RESULT_WINDOW_MS; // 180min = 3h para compat
+const OVERDUE_THROTTLE_MS = 60 * 60 * 1000; // 1h - reintento ficha cada 1h las primeras 48h
+const OLD_THROTTLE_MS = 12 * 60 * 60 * 1000; // 12h - después de 48h, bajar frecuencia
+const LEAGUE_FALLBACK_AFTER_MS = 6 * 60 * 60 * 1000; // 6h - liga solo como respaldo tardío (ficha es más rápida)
 const TZ = "America/Argentina/Buenos_Aires";
 const SITE_URL = "https://juegamoron.vercel.app";
 
@@ -57,28 +61,40 @@ function revalidateTag(tag) {
   }
 }
 
-// kickoff <= now <= kickoff+3h -> ventana live normal
+// 90min <= now-kickoff <= 180min -> ventana útil (Promiedos ya tiene Final en ficha)
 function isDue(datetime) {
   const kickoff = parseSheetDateTime(datetime);
   if (!kickoff) return true;
   const now = Date.now();
-  const kickoffMs = kickoff.getTime();
-  return kickoffMs <= now && now <= kickoffMs + AFTER_KICKOFF_MS;
+  const elapsed = now - kickoff.getTime();
+  return elapsed >= RESULT_START_MS && elapsed <= AFTER_KICKOFF_MS;
 }
 
-// kickoff <= now (pero fuera de ventana 3h) -> overdue, rescatar solo cada 12h
+// now-kickoff > 180min -> overdue, reintentar cada 1h (48h) luego cada 12h
 function isOverdue(datetime) {
   const kickoff = parseSheetDateTime(datetime);
   if (!kickoff) return false;
-  const now = Date.now();
-  return kickoff.getTime() <= now && now > kickoff.getTime() + AFTER_KICKOFF_MS;
+  return Date.now() - kickoff.getTime() > AFTER_KICKOFF_MS;
 }
 
-function shouldCheckOverdue() {
+function shouldCheckOverdue(pendingOverdue) {
   const props = PropertiesService.getScriptProperties();
   const last = Number(props.getProperty("lastOverdueCheck") || "0");
   const now = Date.now();
-  if (now - last < OVERDUE_THROTTLE_MS) return false;
+  // throttle dinámico: 1h si hay algún overdue <48h, sino 12h
+  let throttle = OVERDUE_THROTTLE_MS;
+  if (pendingOverdue && pendingOverdue.length > 0) {
+    let hasRecent = false;
+    for (let i = 0; i < pendingOverdue.length; i++) {
+      const k = parseSheetDateTime(pendingOverdue[i].datetime);
+      if (k && now - k.getTime() < 48 * 60 * 60 * 1000) { hasRecent = true; break; }
+    }
+    if (!hasRecent) throttle = OLD_THROTTLE_MS;
+  }
+  if (now - last < throttle) {
+    console.log("Overdue throttled (" + Math.round((throttle - (now - last)) / 60000) + "min restantes, throttle=" + (throttle / 3600000) + "h)");
+    return false;
+  }
   props.setProperty("lastOverdueCheck", String(now));
   return true;
 }
@@ -136,17 +152,16 @@ function processSheet(sheet) {
     }
   }
 
-  // Early exit 0 fetches: sin pendientes empezados no llamar a promiedos
+  // Early exit 0 fetches: sin pendientes en ventana útil no llamar a promiedos
   if (duePending.length === 0 && overduePending.length === 0) return false;
 
-  // Throttle overdue: si hay overdue pero ya consultamos hace <12h, solo procesar due
+  // Throttle overdue: 90-180min cada 10min (due), >180min cada 1h (overdue reciente) / 12h (viejo)
   let pending = duePending;
   if (overduePending.length > 0) {
-    if (shouldCheckOverdue()) {
-      console.log("Overdue check habilitado (" + overduePending.length + " stales) -> consultando promiedos");
+    if (shouldCheckOverdue(overduePending)) {
+      console.log("Overdue check habilitado (" + overduePending.length + " stales) -> consultando ficha");
       pending = duePending.concat(overduePending);
     } else {
-      console.log("Overdue throttled (" + overduePending.length + " stales), solo due=" + duePending.length);
       if (duePending.length === 0) return false;
     }
   }
@@ -162,21 +177,46 @@ function processSheet(sheet) {
   let changed = false;
   for (const p of pending) {
     let result = null;
+    const kickoff = parseSheetDateTime(p.datetime);
+    const elapsedMin = kickoff ? Math.round((Date.now() - kickoff.getTime()) / 60000) : -1;
 
+    // Prioridad 1: ficha (más rápida, tiene Final al instante)
     if (p.ficha) {
       const game = fetchGame(p.ficha);
-      if (game) result = findResult([game], p);
+      if (game) {
+        result = findResult([game], p);
+        if (!result) console.log("Fila " + p.rowIndex + " (" + p.datetime + ", +" + elapsedMin + "min): ficha sin Final o sin match hbba/ihd -> probando liga si corresponde");
+      } else {
+        console.log("Fila " + p.rowIndex + " (" + p.datetime + "): fetchGame fallo o sin __NEXT_DATA__ para " + p.ficha);
+      }
+    } else {
+      console.log("Fila " + p.rowIndex + " (" + p.datetime + "): sin ficha_partido, usando liga");
     }
-    if (!result && p.competencia) {
+
+    // Prioridad 2: liga solo como respaldo tardío (6h) o si no hay ficha
+    // La liga tarda más que la ficha, no malgastar fetches en ventana 90-180
+    const shouldTryLeague = p.competencia && (!p.ficha || !result) && (
+      !p.ficha || (kickoff && Date.now() - kickoff.getTime() >= LEAGUE_FALLBACK_AFTER_MS)
+    );
+    if (!result && shouldTryLeague) {
       const games = getCachedGames(p.competencia);
-      if (games) result = findResult(games, p);
+      if (games) {
+        const leagueResult = findResult(games, p);
+        if (leagueResult) result = leagueResult;
+        else if (!p.ficha) console.log("Fila " + p.rowIndex + ": liga sin Final/match para " + p.competencia);
+      }
+    } else if (!result && p.competencia && p.ficha) {
+      // dentro de 90-180 con ficha fallida, no insistir por liga todavía
+      console.log("Fila " + p.rowIndex + ": esperando próximo reintento ficha (liga fallback a partir de +6h)");
     }
 
     if (result) {
       sheet.getRange(p.rowIndex, resultCol).setValue(result);
-      console.log("Fila " + p.rowIndex + ": " + result);
+      console.log("Fila " + p.rowIndex + " (" + p.datetime + "): " + result);
       changed = true;
       Utilities.sleep(200);
+    } else {
+      console.log("Fila " + p.rowIndex + " (" + p.datetime + ", +" + elapsedMin + "min): sin resultado aún");
     }
   }
   if (changed) SpreadsheetApp.flush();
